@@ -612,14 +612,14 @@ export default function App() {
         <Card title="Setup" theme={theme}>
           <div style={{ display: "grid", gap: 10 }}>
             <label style={{ display: "grid", gap: 6 }}>
-              <span style={{ color: theme.subtext }}>Mode</span>
+              <span style={{ color: theme.subtext }}>Do you have M8/M9 troops?</span>
               <select
                 value={mode}
                 onChange={(e) => handleModeChange(e.target.value)}
                 style={inputStyle}
               >
-                <option value={MODE_WITHOUT}>Without M8/M9</option>
-                <option value={MODE_WITH}>With M8/M9</option>
+                <option value={MODE_WITHOUT}>No</option>
+                <option value={MODE_WITH}>Yes</option>
               </select>
             </label>
 
