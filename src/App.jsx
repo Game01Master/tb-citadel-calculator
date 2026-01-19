@@ -635,7 +635,7 @@ export default function App() {
                 fontWeight: 900,
               }}
             >
-              Reset Troop selection
+              Reset Troops selection
             </button>
 
             <label style={{ display: "grid", gap: 6 }}>
@@ -662,7 +662,7 @@ export default function App() {
         <Card title="Wall Killer" theme={theme}>
           <div style={{ display: "grid", gap: 10 }}>
             <label style={{ display: "grid", gap: 6 }}>
-              <span style={{ color: theme.subtext }}>Troop</span>
+              <span style={{ color: theme.subtext }}>Troops</span>
               <select
                 value={wallKillerTroop}
                 onChange={(e) => {
@@ -708,7 +708,7 @@ export default function App() {
             <Card key={idx} title={`${idx + 1}. ${s.label}`} theme={theme}>
               <div style={{ display: "grid", gap: 10 }}>
                 <label style={{ display: "grid", gap: 6 }}>
-                  <span style={{ color: theme.subtext }}>Troop</span>
+                  <span style={{ color: theme.subtext }}>Troops</span>
                   <select
                     value={strikerTroops[idx]}
                     onChange={(e) => setTroopAt(idx, e.target.value)}
