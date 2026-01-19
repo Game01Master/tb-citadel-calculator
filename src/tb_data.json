@@ -265,13 +265,14 @@
       "Corax I",
       "Griffin VII",
       "Griffin VI",
-      "Griffin V",
-      "Royal Lion I"
+      "Griffin V"
     ],
     "WITH": [
       "Corax II",
       "Corax I",
-      "Griffin VII"
+      "Griffin VII",
+      "Royal Lion II",
+      "Royal Lion I"
     ]
   }
 }
