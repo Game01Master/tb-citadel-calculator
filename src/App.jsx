@@ -605,7 +605,7 @@ export default function App() {
       }}
     >
       <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 10 }}>
-        TB Citadel Calculator (Mobile)
+        Citadel Calculator by GM
       </div>
 
       <div style={{ display: "grid", gap: 10, paddingBottom: 130 }}>
