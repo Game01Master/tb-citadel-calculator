@@ -753,7 +753,7 @@ export default function App() {
 
                 {isFirst && (
                   <div style={{ marginTop: 6, paddingTop: 8, borderTop: `1px solid ${theme.borderSoft}` }}>
-                    <Row label="Deaths if citadel strikes first" value={fmtInt(firstDeaths)} theme={theme} />
+                    <Row label="Losses if citadel strikes first" value={fmtInt(firstDeaths)} theme={theme} />
                   </div>
                 )}
               </div>
