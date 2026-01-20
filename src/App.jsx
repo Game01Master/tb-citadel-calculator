@@ -631,7 +631,7 @@ export default function App() {
                 borderRadius: 14,
                 border: `1px solid ${theme.btnGhostBorder}`,
                 background: theme.btnGhostBg,
-                color: theme.text,
+                color: "#c63636",
                 fontWeight: 900,
               }}
             >
