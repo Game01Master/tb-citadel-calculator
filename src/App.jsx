@@ -769,40 +769,49 @@ export default function App() {
       </div>
 
       {/* Bottom mobile bar with CALCULATE button */}
-      <div
-        style={{
-          position: "fixed",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          padding: "10px 12px",
-          paddingBottom: "calc(10px + env(safe-area-inset-bottom))",
-          background: theme.bottomBarBg,
-          backdropFilter: "blur(8px)",
-          borderTop: `1px solid ${theme.border}`,
-          zIndex: 999,
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 600, margin: "0 auto", padding: "0 12px" }}>
-          <button
-            onClick={showResults}
-            style={{
-              width: "100%",
-              padding: "14px 12px",
-              borderRadius: 16,
-              border: "none",
-              background: theme.btnBg,
-              color: theme.btnText,
-              fontWeight: 900,
-              letterSpacing: 0.4,
-              fontSize: 16,
-              boxShadow: "0 10px 25px rgba(0,0,0,0.18)",
-            }}
-          >
-            CALCULATE
-          </button>
-        </div>
-      </div>
+<div
+  style={{
+    position: "fixed",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: 10,
+    paddingBottom: `calc(10px + env(safe-area-inset-bottom))`,
+    background: theme.bottomBarBg,
+    backdropFilter: "blur(8px)",
+    borderTop: `1px solid ${theme.border}`,
+    zIndex: 999,
+  }}
+>
+  {/* SAME container as the cards */}
+  <div
+    style={{
+      width: "100%",
+      maxWidth: 600,
+      margin: "0 auto",
+      padding: "0 12px", // ✅ identično kao inner container padding
+      boxSizing: "border-box",
+    }}
+  >
+    <button
+      onClick={showResults}
+      style={{
+        width: "100%",
+        padding: "14px 12px",
+        borderRadius: 16,
+        border: "none",
+        background: theme.btnBg,
+        color: theme.btnText,
+        fontWeight: 900,
+        letterSpacing: 0.4,
+        fontSize: 16,
+        boxShadow: "0 10px 25px rgba(0,0,0,0.18)",
+      }}
+    >
+      CALCULATE
+    </button>
+  </div>
+</div>
 
       {/* Results popup */}
       <Modal
