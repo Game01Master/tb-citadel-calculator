@@ -556,7 +556,7 @@ export default function App() {
       const thirdS = getBaseStrength(picked);
       if (first && picked && thirdS > firstS) {
         setWarningMsg(
-          `Third striker (${picked}) has higher BASE strength (${fmtInt(thirdS)}) than your First striker (${first}, ${fmtInt(firstS)}).\n\nSuggestion: choose a stronger First striker troop.`
+          `Third striker (${picked}) has higher BASE strength (${fmtInt(thirdS)}) and health than your First striker (${first}, ${fmtInt(firstS)}).\n\nSuggestion: choose a stronger First striker troop.`
         );
         // prevent invalid selection
         setTroopAt(2, "");
