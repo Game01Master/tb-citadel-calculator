@@ -118,8 +118,8 @@ const WALL_KILLER_NAMES_RAW = [
   "Josephine I",
   "Siege ballistae VII",
   "Siege ballistae VI",
-  "Catapult IV",
   "Catapult V",
+  "Catapult IV",
 ];
 
 function toNum(v) {
