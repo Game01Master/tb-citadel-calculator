@@ -39,11 +39,11 @@ const RESULT_ORDER = [
   "Siege ballistae VI",
   "Punisher I",
   "Dualist I",
-  "Catapults V",
+  "Catapult V",
   "Vulture VII",
   "Heavy halberdier VII",
   "Heavy knight VII",
-  "Catapults IV",
+  "Catapult IV",
   "Vulture VI",
   "Heavy halberdier VI",
   "Heavy knight VI",
@@ -118,8 +118,8 @@ const WALL_KILLER_NAMES_RAW = [
   "Josephine I",
   "Siege ballistae VII",
   "Siege ballistae VI",
-  "Catapult IV",
   "Catapult V",
+  "Catapult IV",
 ];
 
 function toNum(v) {
