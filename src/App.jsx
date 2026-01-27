@@ -626,7 +626,7 @@ export default function App() {
         if (pickedS > firstS || pickedH > firstH) {
           const label = STRIKER_LABELS[idx] || "Striker";
           setWarningMsg(
-            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troop!!`
+            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troops!!`
           );
           // prevent invalid selection
           setTroopAt(idx, "");
