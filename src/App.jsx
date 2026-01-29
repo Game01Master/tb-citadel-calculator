@@ -876,7 +876,7 @@ const [calcOutput, setCalcOutput] = useState(null);
               marginBottom: 12,
             }}
           >
-            Instructions
+            Help
           </button>
           <div style={{ display: "grid", gap: 10 }}>
             <label style={{ display: "grid", gap: 6 }}>
@@ -1105,7 +1105,7 @@ const [calcOutput, setCalcOutput] = useState(null);
             {/* Instructions popup */}
       <Modal
         open={instructionsOpen}
-        title="Help"
+        title="Instructions"
         onClose={() => setInstructionsOpen(false)}
         theme={theme}
       >
