@@ -1112,7 +1112,7 @@ const [calcOutput, setCalcOutput] = useState(null);
         <div style={{ color: theme.text, lineHeight: 1.45, fontSize: 14 }}>
           <div style={{ fontWeight: 900, marginBottom: 6 }}>Goal</div>
           <div style={{ color: theme.subtext, marginBottom: 12 }}>
-            Use the correct troops and bonuses to minimize losses when attacking a Citadel.
+            Use the correct troops and bonuses to minimize losses when attacking a Citadel.I took care of the proper troop selection. All you need to do is choose them from the drop-down menu.
           </div>
 
           <div style={{ fontWeight: 900, marginBottom: 6 }}>Most important rule</div>
