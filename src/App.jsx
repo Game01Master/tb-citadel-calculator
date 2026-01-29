@@ -652,7 +652,7 @@ const [calcOutput, setCalcOutput] = useState(null);
         if (pickedS > firstS || pickedH > firstH) {
           const label = STRIKER_LABELS[idx] || "Striker";
           setWarningMsg(
-            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troop!!`
+            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troops!!`
           );
           // prevent invalid selection
           setTroopAt(idx, "");
@@ -1105,7 +1105,7 @@ const [calcOutput, setCalcOutput] = useState(null);
             {/* Instructions popup */}
       <Modal
         open={instructionsOpen}
-        title="Instructions"
+        title="Help"
         onClose={() => setInstructionsOpen(false)}
         theme={theme}
       >
@@ -1136,16 +1136,16 @@ const [calcOutput, setCalcOutput] = useState(null);
             Best options include <b style={{ color: theme.text }}>Valkyrie Diadem</b>, <b style={{ color: theme.text }}>Medallion</b>, <b style={{ color: theme.text }}>Belt</b>, <b style={{ color: theme.text }}>Flask</b>.
           </div>
 
-          <div style={{ fontWeight: 900, marginBottom: 6 }}>Recalculate after changes</div>
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>Recalculate after strength bonus changes</div>
           <div style={{ color: theme.subtext, marginBottom: 12 }}>
-            After any change (captain level, artifact, equipment, bonuses), press <b style={{ color: theme.text }}>Calculate</b> again.
-            Even small strength/health changes can change the required troop numbers.
+            After any strength bonus change (captain level, artifact, equipment, bonuses), enter new strength bonus and press <b style={{ color: theme.text }}>Calculate</b> again.
+            Even small strength changes can change the required troop numbers.
           </div>
 
-          <div style={{ fontWeight: 900, marginBottom: 6 }}>Recommended test</div>
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>Where to find the health and strength bonus</div>
           <div style={{ color: theme.subtext }}>
             Select the troops in the calculator, make an attack on a level 10 Citadel with <b style={{ color: theme.text }}>10 of each troop type</b>,
-            then copy the bonuses from the report into the calculator for the lowest troop losses.
+            then copy the bonuses from the report into the calculator and press Calculate.
           </div>
         </div>
       </Modal>
