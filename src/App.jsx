@@ -1258,9 +1258,7 @@ const [calcOutput, setCalcOutput] = useState(null);
         </button>
       </Modal>
 
-
-
-              {/* Instructions popup */}
+      {/* Instructions popup */}
       <Modal
         open={instructionsOpen}
         title="HELP"
@@ -1308,7 +1306,8 @@ const [calcOutput, setCalcOutput] = useState(null);
           </div>
         </div>
       </Modal>
-{/* Results popup */}
+        
+     {/* Results popup */}
       <Modal
         open={resultsOpen}
         title="Calculated List"
