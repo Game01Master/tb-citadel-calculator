@@ -79,7 +79,7 @@
       "fortBonus": null
     },
     {
-      "name": "Heavy halberdier VII",
+      "name": "Heavy Halberdier VII",
       "strength": 1700,
       "health": 5100,
       "fortBonus": null
@@ -91,7 +91,7 @@
       "fortBonus": null
     },
     {
-      "name": "Heavy halberdier VI",
+      "name": "Heavy Halberdier VI",
       "strength": 940,
       "health": 2820,
       "fortBonus": null
@@ -133,7 +133,7 @@
       "fortBonus": null
     },
     {
-      "name": "Heavy knight VII",
+      "name": "Heavy Knight VII",
       "strength": 1700,
       "health": 5100,
       "fortBonus": null
@@ -145,7 +145,7 @@
       "fortBonus": null
     },
     {
-      "name": "Heavy knight VI",
+      "name": "Heavy Knight VI",
       "strength": 940,
       "health": 2820,
       "fortBonus": null
@@ -205,13 +205,13 @@
       "fortBonus": 1111
     },
     {
-      "name": "Siege ballistae VII",
+      "name": "Siege Ballistae VII",
       "strength": 8500,
       "health": 51000,
       "fortBonus": 740
     },
     {
-      "name": "Siege ballistae VI",
+      "name": "Siege Ballistae VI",
       "strength": 4730,
       "health": 28400,
       "fortBonus": 494
@@ -249,11 +249,11 @@
   ],
   "additionalBonusNormal": {
     "Punisher I": 1367,
-    "Heavy halberdier VII": 911,
-    "Heavy halberdier VI": 608,
+    "Heavy Halberdier VII": 911,
+    "Heavy Halberdier VI": 608,
     "Dualist I": 683,
-    "Heavy knight VII": 456,
-    "Heavy knight VI": 304,
+    "Heavy Knight VII": 456,
+    "Heavy Knight VI": 304,
     "Swordsmen V": 203
   },
   "phoenixExtra": {
