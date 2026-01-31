@@ -1273,7 +1273,7 @@ const [calcOutput, setCalcOutput] = useState(null);
     <div style={{ fontWeight: 900, marginBottom: 6 }}>Goal</div>
     <div style={{ color: theme.subtext, marginBottom: 12 }}>
       Use the correct troops and bonuses to minimize losses when attacking a Citadel.
-      I took care of the proper troop selection.
+      I took care of the proper troops selection.
     </div>
 
     <div style={{ fontWeight: 900, marginBottom: 6 }}>Most important rule</div>
