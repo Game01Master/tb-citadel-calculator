@@ -1260,29 +1260,33 @@ const [calcOutput, setCalcOutput] = useState(null);
 
 
 
-            {/* Help popup */}
+              {/* Instructions popup */}
       <Modal
-        open={helpOpen}
-        title="Help"
-        onClose={() => setHelpOpen(false)}
+        open={instructionsOpen}
+        title="HELP"
+        onClose={() => setInstructionsOpen(false)}
         theme={theme}
       >
         <div style={{ color: theme.text, lineHeight: 1.45, fontSize: 14 }}>
-          <div style={{ fontWeight: 900, marginBottom: 6 }}>Most important</div>
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>Goal</div>
           <div style={{ color: theme.subtext, marginBottom: 12 }}>
-            The priority is to increase <b style={{ color: theme.text }}>First Striker Health</b>. In a proper attack, the First Striker is the only troop group that should take losses.
+            Use the correct troops and bonuses to minimize losses when attacking a Citadel. I took care of the proper troop selection.
+          </div>
+
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>Most important rule</div>
+          <div style={{ color: theme.subtext, marginBottom: 12 }}>
+            Maximize <b style={{ color: theme.text }}>First Striker Health</b>. In a proper attack, the First Striker is the only troop group that should take losses. If, after using the calculator, you are losing troops that are not First Strikers, you have entered the wrong bonus for one of the troops or used the wrong number of troops during the attack.
+            The number of FIRST STRIKER troops CAN be higher than calculated in the calculator. All other troops MUST be used in the exact number as calculated.
           </div>
 
           <div style={{ fontWeight: 900, marginBottom: 6 }}>First Striker</div>
           <div style={{ color: theme.subtext, marginBottom: 12 }}>
-            First Striker should be the strongest <b style={{ color: theme.text }}>flying Guardsmen</b>:
-            <b style={{ color: theme.text }}> Corax</b> or <b style={{ color: theme.text }}> Griffin</b>.
+            First Striker must be the strongest <b style={{ color: theme.text }}>flying Guardsmen</b>: <b style={{ color: theme.text }}>Corax</b> or <b style={{ color: theme.text }}>Griffin</b>.
           </div>
 
           <div style={{ fontWeight: 900, marginBottom: 6 }}>Captains</div>
           <div style={{ color: theme.subtext, marginBottom: 12 }}>
-            Best captains: <b style={{ color: theme.text }}>Wu Zetian</b>, <b style={{ color: theme.text }}>Brunhild</b>, <b style={{ color: theme.text }}>Skadi</b>,
-            <b style={{ color: theme.text }}>Beowulf</b>, <b style={{ color: theme.text }}>Aydae</b>, <b style={{ color: theme.text }}>Ramses</b>, <b style={{ color: theme.text }}>Sofia</b>.
+            Recommended captains: <b style={{ color: theme.text }}>Wu Zetian</b>, <b style={{ color: theme.text }}>Brunhild</b>, <b style={{ color: theme.text }}>Skadi</b>, <b style={{ color: theme.text }}>Beowulf</b>, <b style={{ color: theme.text }}>Aydae</b>, <b style={{ color: theme.text }}>Ramses</b>, <b style={{ color: theme.text }}>Sofia</b>.
           </div>
 
           <div style={{ fontWeight: 900, marginBottom: 6 }}>Artifacts</div>
@@ -1292,12 +1296,18 @@ const [calcOutput, setCalcOutput] = useState(null);
           </div>
 
           <div style={{ fontWeight: 900, marginBottom: 6 }}>Recalculate after changes</div>
+          <div style={{ color: theme.subtext, marginBottom: 12 }}>
+            After any strength bonus change (captain level, artifact, equipment, bonuses), enter new strength bonuses and  press <b style={{ color: theme.text }}>Calculate</b> again.
+            Even small strength change can change the required troop numbers.
+          </div>
+
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>How to find strength and health bonuses?</div>
           <div style={{ color: theme.subtext }}>
-            After any change in Strength/Health (e.g. captain level up, new artifact/equipment), run <b style={{ color: theme.text }}>Calculate</b> again.
+            Select the troops in the calculator, make an attack on a level 10 Citadel with <b style={{ color: theme.text }}>10 of each troop type</b>,
+            then copy the bonuses from the report into the calculator and press Calculate.
           </div>
         </div>
       </Modal>
-
 {/* Results popup */}
       <Modal
         open={resultsOpen}
