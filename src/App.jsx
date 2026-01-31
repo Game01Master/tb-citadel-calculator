@@ -1260,11 +1260,11 @@ const [calcOutput, setCalcOutput] = useState(null);
 
 
 
-{/* Instructions popup */}
+{/* Help popup */}
 <Modal
-  open={instructionsOpen}
-  title="HELP"
-  onClose={() => setInstructionsOpen(false)}
+  open={helpOpen}
+  title="Help"
+  onClose={() => setHelpOpen(false)}
   theme={theme}
 >
   <div style={{ color: theme.text, lineHeight: 1.45, fontSize: 14 }}>
