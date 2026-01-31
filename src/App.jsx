@@ -35,18 +35,18 @@ const RESULT_ORDER = [
   "Griffin VI",
   "Josephine I",
   "Griffin V",
-  "Siege ballistae VII",
-  "Siege ballistae VI",
+  "Siege Ballistae VII",
+  "Siege Ballistae VI",
   "Punisher I",
-  "Dualist I",
+  "Dealist I",
   "Catapult V",
   "Vulture VII",
-  "Heavy halberdier VII",
-  "Heavy knight VII",
+  "Heavy Halberdier VII",
+  "Heavy Knight VII",
   "Catapult IV",
   "Vulture VI",
-  "Heavy halberdier VI",
-  "Heavy knight VI",
+  "Heavy Halberdier VI",
+  "Heavy Knight VI",
   "Spearmen V",
   "Swordsmen V",
   "Vulture V"
@@ -75,8 +75,8 @@ const TROOPS_WITH_M8_RAW = [
   "Ariel",
   "Josephine II",
   "Josephine I",
-  "Siege ballistae VII",
-  "Siege ballistae VI",
+  "Siege Ballistae VII",
+  "Siege Ballistae VI",
   "Catapult V",
   "Catapult IV",
 ];
@@ -85,17 +85,17 @@ const TROOPS_WITHOUT_M8_RAW = [
   "Corax I",
   "Punisher I",
   "Griffin VII",
-  "Heavy halberdier VII",
+  "Heavy Halberdier VII",
   "Griffin VI",
-  "Heavy halberdier VI",
+  "Heavy Halberdier VI",
   "Griffin V",
   "Spearmen V",
   "Royal Lion I",
-  "Dualist I",
+  "Duelist I",
   "Vulture VII",
-  "Heavy knight VII",
+  "Heavy Knight VII",
   "Vulture VI",
-  "Heavy knight VI",
+  "Heavy Knight VI",
   "Vulture V",
   "Swordsmen V",
   "Wyvern",
@@ -104,8 +104,8 @@ const TROOPS_WITHOUT_M8_RAW = [
   "Epic Monster Hunter",
   "Ariel",
   "Josephine I",
-  "Siege ballistae VII",
-  "Siege ballistae VI",
+  "Siege Ballistae VII",
+  "Siege Ballistae VI",
   "Catapult V",
   "Catapult IV",
   "Manticore",
@@ -116,8 +116,8 @@ const WALL_KILLER_NAMES_RAW = [
   "Ariel",
   "Josephine II",
   "Josephine I",
-  "Siege ballistae VII",
-  "Siege ballistae VI",
+  "Siege Ballistae VII",
+  "Siege Ballistae VI",
   "Catapult V",
   "Catapult IV",
 ];
@@ -524,12 +524,12 @@ export default function App() {
   const [warningMsg, setWarningMsg] = useState("");
 
   // Group-synced strength bonuses (shared across cards)
-  const GROUP_KEYS = useMemo(() => (["CORAX","PHOENIX","PHH_SPEAR","DUAL_HK_SW","VULTURE","ROYAL_LION","GRIFFIN"]), []);
+  const GROUP_KEYS = useMemo(() => (["CORAX","PHOENIX","PHH_SPEAR","DUEL_HK_SW","VULTURE","ROYAL_LION","GRIFFIN"]), []);
   const [groupBonusPct, setGroupBonusPct] = useState(() => ({
     CORAX: "",
     PHOENIX: "",
     PHH_SPEAR: "",
-    DUAL_HK_SW: "",
+    DUEL_HK_SW: "",
     VULTURE: "",
     ROYAL_LION: "",
     GRIFFIN: "",
@@ -547,8 +547,8 @@ export default function App() {
     if (n.startsWith("griffin")) return "GRIFFIN";
     if (n.startsWith("punisher") || n.startsWith("heavy halberdier") || n.startsWith("spearmen"))
       return "PHH_SPEAR";
-    if (n.startsWith("dualist") || n.startsWith("heavy knight") || n.startsWith("swordsmen"))
-      return "DUAL_HK_SW";
+    if (n.startsWith("duelist") || n.startsWith("heavy knight") || n.startsWith("swordsmen"))
+      return "DUEL_HK_SW";
     return null;
   };
 
@@ -747,7 +747,7 @@ export default function App() {
       CORAX: "",
       PHOENIX: "",
       PHH_SPEAR: "",
-      DUAL_HK_SW: "",
+      DUEL_HK_SW: "",
       VULTURE: "",
       ROYAL_LION: "",
       GRIFFIN: "",
@@ -820,7 +820,7 @@ export default function App() {
         if (pickedS > firstS || pickedH > firstH) {
           const label = STRIKER_LABELS[idx] || "Striker";
           setWarningMsg(
-            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troop!!`
+            `${label} (${picked}) has higher BASE strength (${fmtInt(pickedS)}) and BASE health (${fmtInt(pickedH)}) than your First striker (${first}, ${fmtInt(firstS)} / ${fmtInt(firstH)}).\n\nChoose a stronger First striker troops!!`
           );
           // prevent invalid selection
           setTroopAt(idx, "");
@@ -875,7 +875,7 @@ export default function App() {
       CORAX: "",
       PHOENIX: "",
       PHH_SPEAR: "",
-      DUAL_HK_SW: "",
+      DUEL_HK_SW: "",
       VULTURE: "",
       ROYAL_LION: "",
       GRIFFIN: "",
