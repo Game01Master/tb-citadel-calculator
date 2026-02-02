@@ -1113,7 +1113,7 @@ export default function App() {
       </div>
     
       <footer className="app-footer">
-        © 2026 game01master · Non-commercial license
+        © 2026 Game01Master · Non-commercial license
       </footer>
 
 </div>
