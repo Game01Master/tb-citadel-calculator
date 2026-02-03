@@ -814,7 +814,6 @@ export default function App() {
       const dmgPerTroop = baseStrength * (1 + effBonus / 100);
       const targetHP = toNum(targets[idx]);
       let required = dmgPerTroop > 0 ? Math.floor(targetHP / dmgPerTroop) : 0;
-      if (idx === 2 && dmgPerTroop > 0) required = Math.round(targetHP / dmgPerTroop);
       if (idx === 0 && dmgPerTroop > 0) required += firstDeaths;
       return { idx, label, troopName, effBonus, requiredTroops: required };
     });
