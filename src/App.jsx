@@ -814,7 +814,7 @@ export default function App() {
       const dmgPerTroop = baseStrength * (1 + effBonus / 100);
       const targetHP = toNum(targets[idx]);
       let required = dmgPerTroop > 0 ? Math.floor(targetHP / dmgPerTroop) : 0;
-      if (idx === 0 && dmgPerTroop > 0) required += firstDeaths;
+      if (idx === 0 && dmgPerTroop > 0) required += firstDeaths + 10;
       return { idx, label, troopName, effBonus, requiredTroops: required };
     });
   }, [cit, targets, strikerTroops, strikerBonusPct, troopByName, additionalBonus, phoenixExtra, mode, firstDeaths]);
