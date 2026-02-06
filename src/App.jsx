@@ -1049,7 +1049,7 @@ export default function App() {
                   marginTop: 16,
                 }}
               >
-                CALCULATE RESULTS
+                CALCULATE
               </button>
             </div>
 
