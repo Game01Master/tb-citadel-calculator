@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import TB from "./tb_data.json";
 
 // --- GAMING FONTOVI ---
@@ -131,26 +132,21 @@ function usePrefersDark() {
 }
 
 function makeTheme(isDark) {
-  // Prilagođena Gaming Tema
   return {
     pageBg: "#050505",
-    // Tamna kartica + "pro" zlatni odsjaj
-    cardBg: "linear-gradient(180deg, rgba(20,22,28,0.98) 0%, rgba(12,13,16,0.98) 100%)",
-    // Jači zlatni obrub (tražio si da bude vidljiviji)
+    cardBg: "linear-gradient(180deg, rgba(20,22,28,0.95) 0%, rgba(12,13,16,0.98) 100%)",
     border: "rgba(197, 160, 89, 0.75)",
     borderSoft: "rgba(255, 255, 255, 0.08)",
     text: "#ececec",
     subtext: "#a0a0a0",
     inputBg: "linear-gradient(180deg, rgba(15,16,18,0.92) 0%, rgba(8,8,9,0.92) 100%)",
     inputBorder: "rgba(197, 160, 89, 0.55)",
-    // Zlatni gumb
     btnBg: "linear-gradient(135deg, #c5a059 0%, #9a7b3a 100%)",
     btnText: "#000000",
     btnGhostBg: "rgba(255, 255, 255, 0.05)",
     btnGhostBorder: "rgba(197, 160, 89, 0.55)",
     overlay: "rgba(0,0,0,0.45)",
-    bottomBarBg: "rgba(10, 10, 12, 0.98)",
-    accent: "#c5a059", // Glavna zlatna boja
+    accent: "#c5a059",
     danger: "#ff4d4d",
     shadow: "0 10px 30px rgba(0,0,0,0.7)",
     cardShadow: "0 10px 28px rgba(0,0,0,0.6)",
@@ -159,34 +155,25 @@ function makeTheme(isDark) {
   };
 }
 
-// 🛡️ CARD - Gaming stil
-function Card({ title, children, theme }) {
+// 🛡️ CARD
+function Card({ title, children, theme, className }) {
   return (
     <div
+      className={className}
       style={{
         border: `1.5px solid ${theme.border}`,
         borderRadius: 12,
         padding: 16,
         background: theme.cardBg,
         boxShadow: `${theme.cardShadow}, ${theme.goldGlow}`,
-        marginBottom: 16,
-        // Osiguravamo da dropdown može izaći van ako treba (ali ovdje koristimo Modal pa je ok)
-        // Ali za svaki slučaj, kod gaming UI-a često želimo oštrije rubove ili glow
         position: "relative",
+        height: "100%", 
       }}
     >
-      {/* Ukrasna linija lijevo */}
       <div style={{position: "absolute", left: 0, top: 16, bottom: 16, width: 3, background: theme.accent, borderRadius: "0 2px 2px 0"}}></div>
-      
       <div style={{ 
-        fontWeight: 700, 
-        fontSize: 16, 
-        marginBottom: 16, 
-        color: theme.accent, // Zlatni naslov
-        fontFamily: "'Cinzel', serif", 
-        letterSpacing: "1px",
-        textTransform: "uppercase",
-        paddingLeft: 12 // Mjesto za liniju
+        fontWeight: 700, fontSize: 16, marginBottom: 16, color: theme.accent, 
+        fontFamily: "'Cinzel', serif", letterSpacing: "1px", textTransform: "uppercase", paddingLeft: 12 
       }}>
         {title}
       </div>
@@ -195,25 +182,34 @@ function Card({ title, children, theme }) {
   );
 }
 
-// 🛡️ PICKER - Izgleda kao dropdown gumb
-function TroopPicker({ label, value, options, onChange, theme, inputStyle }) {
+// 🛡️ PICKER (TROOPS - POPUP CENTERED)
+function TroopPicker({ label, value, options, onChange, theme, inputStyle, locked, onLockedClick }) {
   const [open, setOpen] = useState(false);
+  const [anchorRect, setAnchorRect] = useState(null);
+  const buttonRef = useRef(null);
   const display = value ? value : "— Select —";
+
+  const handleClick = () => {
+    if (locked) {
+      if (onLockedClick) onLockedClick();
+    } else {
+      if (buttonRef.current) {
+        setAnchorRect(buttonRef.current.getBoundingClientRect());
+      }
+      setOpen((v) => !v);
+    }
+  };
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
       <span style={{ color: theme.subtext, fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>{label}</span>
-
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={handleClick}
         style={{
           ...inputStyle,
-          textAlign: "left",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 10,
+          textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, 
           cursor: "pointer",
           background: "linear-gradient(180deg, rgba(28,30,38,0.9) 0%, rgba(14,15,18,0.95) 100%)",
           boxShadow: `inset 0 0 0 1px rgba(197,160,89,0.12), 0 10px 22px rgba(0,0,0,0.55)`
@@ -222,40 +218,20 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle }) {
         <span style={{ display: "inline-flex", alignItems: "center", gap: 12, minWidth: 0 }}>
           {value ? (
             iconSrcForTroop(value) ? (
-              <img
-                src={iconSrcForTroop(value)}
-                alt={value}
-                width={36}
-                height={36}
-                style={{ borderRadius: 6, flexShrink: 0, border: "1px solid #333" }}
-                loading="lazy"
-              />
+              <img src={iconSrcForTroop(value)} alt={value} width={36} height={36} style={{ borderRadius: 6, flexShrink: 0, border: "1px solid #333" }} loading="lazy" />
             ) : null
           ) : (
-             // Placeholder ikona
              <div style={{width: 36, height: 36, borderRadius: 6, background: "rgba(255,255,255,0.05)", border: "1px dashed #444"}}></div>
           )}
-
-          <span
-            style={{
-              color: value ? theme.text : theme.subtext,
-              fontWeight: 700,
-              fontSize: 15,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              fontFamily: "'Inter', sans-serif"
-            }}
-          >
+          <span style={{ color: value ? theme.text : theme.subtext, fontWeight: 700, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "'Inter', sans-serif" }}>
             {display}
           </span>
         </span>
-
         <span style={{ color: theme.accent, fontSize: 14 }}>▼</span>
       </button>
-
-      {/* Modal koji glumi Dropdown - Z Position FIX: Z-index 2000 */}
-      <Modal open={open} title={`Select ${label}`} onClose={() => setOpen(false)} theme={theme} isDropdown={true}>
+      
+      {/* MODE = TROOP (Centrirano vertikalno, poravnato horizontalno) */}
+      <Modal open={open} title={`Select ${label}`} onClose={() => setOpen(false)} theme={theme} mode="troop" anchorRect={anchorRect}>
         <div style={{ display: "grid", gap: 6 }}>
           {options.map((opt) => {
             const isBlank = opt === "";
@@ -265,40 +241,20 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle }) {
               <button
                 key={opt || "__blank__"}
                 type="button"
-                onClick={() => {
-                  onChange(opt);
-                  setOpen(false);
-                }}
+                onClick={() => { onChange(opt); setOpen(false); }}
                 style={{
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "10px 12px",
-                  borderRadius: 8,
+                  width: "100%", textAlign: "left", padding: "10px 12px", borderRadius: 8,
                   border: isSelected ? `1px solid ${theme.accent}` : "1px solid transparent",
                   background: isSelected ? "rgba(197, 160, 89, 0.15)" : "rgba(255, 255, 255, 0.03)",
                   color: isSelected ? theme.accent : theme.text,
-                  fontWeight: 600,
-                  fontSize: 15,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  cursor: "pointer",
-                  transition: "all 0.1s",
+                  fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", gap: 12, cursor: "pointer", transition: "all 0.1s",
                 }}
               >
                 {!isBlank && iconSrcForTroop(opt) ? (
-                  <img
-                    src={iconSrcForTroop(opt)}
-                    alt={opt}
-                    width={40}
-                    height={40}
-                    style={{ borderRadius: 6, flexShrink: 0 }}
-                    loading="lazy"
-                  />
+                  <img src={iconSrcForTroop(opt)} alt={opt} width={40} height={40} style={{ borderRadius: 6, flexShrink: 0 }} loading="lazy" />
                 ) : (
                   <div style={{ width: 40, height: 40 }} />
                 )}
-
                 <span>{name}</span>
               </button>
             );
@@ -309,48 +265,43 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle }) {
   );
 }
 
-// 🛡️ OPTION PICKER - isti modal stil kao TroopPicker (za Android native select problem)
+// 🛡️ OPTION PICKER (SETUP - DROPDOWN STYLE)
 function OptionPicker({ label, value, options, onChange, theme, inputStyle }) {
   const [open, setOpen] = useState(false);
+  const [anchorRect, setAnchorRect] = useState(null);
+  const buttonRef = useRef(null);
   const selected = options.find((o) => o.value === value);
   const display = selected ? selected.label : "— Select —";
+
+  const handleClick = () => {
+    if (buttonRef.current) {
+        setAnchorRect(buttonRef.current.getBoundingClientRect());
+    }
+    setOpen((v) => !v);
+  };
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
       <span style={{ color: theme.subtext, fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>{label}</span>
-
       <button
+        ref={buttonRef}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={handleClick} 
         style={{
           ...inputStyle,
-          textAlign: "left",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 10,
-          cursor: "pointer",
+          textAlign: "left", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, cursor: "pointer",
           background: "linear-gradient(180deg, rgba(28,30,38,0.9) 0%, rgba(14,15,18,0.95) 100%)",
           boxShadow: `inset 0 0 0 1px rgba(197,160,89,0.12), 0 10px 22px rgba(0,0,0,0.55)`,
         }}
       >
-        <span
-          style={{
-            color: selected ? theme.text : theme.subtext,
-            fontWeight: 800,
-            fontSize: 15,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <span style={{ color: selected ? theme.text : theme.subtext, fontWeight: 800, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {display}
         </span>
-
         <span style={{ color: theme.accent, fontSize: 14 }}>▼</span>
       </button>
 
-      <Modal open={open} title={label} onClose={() => setOpen(false)} theme={theme} isDropdown={true}>
+      {/* MODE = DROPDOWN (Ispod gumba) */}
+      <Modal open={open} title={label} onClose={() => setOpen(false)} theme={theme} mode="dropdown" anchorRect={anchorRect}>
         <div style={{ display: "grid", gap: 6 }}>
           {options.map((opt) => {
             const isSelected = opt.value === value;
@@ -358,21 +309,13 @@ function OptionPicker({ label, value, options, onChange, theme, inputStyle }) {
               <button
                 key={String(opt.value)}
                 type="button"
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
+                onClick={() => { onChange(opt.value); setOpen(false); }}
                 style={{
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "12px 12px",
-                  borderRadius: 10,
+                  width: "100%", textAlign: "left", padding: "12px 12px", borderRadius: 10,
                   border: isSelected ? `1px solid ${theme.accent}` : "1px solid transparent",
                   background: isSelected ? "rgba(197, 160, 89, 0.15)" : "rgba(255, 255, 255, 0.03)",
                   color: isSelected ? theme.accent : theme.text,
-                  fontWeight: 800,
-                  fontSize: 18,
-                  cursor: "pointer",
+                  fontWeight: 800, fontSize: 18, cursor: "pointer",
                 }}
               >
                 {opt.label}
@@ -387,97 +330,101 @@ function OptionPicker({ label, value, options, onChange, theme, inputStyle }) {
 
 function Row({ label, value, theme, accent }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "100%",
-        padding: "8px 0",
-        borderBottom: `1px solid ${theme.borderSoft}`,
-      }}
-    >
-      <div style={{ color: theme.subtext, fontSize: 13, textTransform: "uppercase" }}>
-        {label}
-      </div>
-      <div style={{ fontWeight: 800, fontSize: 16, color: accent ? theme.accent : theme.text, fontFamily: "'Inter', sans-serif" }}>
-        {value}
-      </div>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "8px 0", borderBottom: `1px solid ${theme.borderSoft}` }}>
+      <div style={{ color: theme.subtext, fontSize: 13, textTransform: "uppercase" }}>{label}</div>
+      <div style={{ fontWeight: 800, fontSize: 16, color: accent ? theme.accent : theme.text, fontFamily: "'Inter', sans-serif" }}>{value}</div>
     </div>
   );
 }
 
-// 🛡️ MODAL - Popravljen Z-Index i izgled
-function Modal({ open, title, onClose, children, theme, isDropdown }) {
+// 🛡️ MODAL - UNIVERZALNI (3 NAČINA RADA)
+function Modal({ open, title, onClose, children, theme, mode, anchorRect }) {
   if (!open) return null;
-  return (
+  
+  // mode: "dropdown" | "troop" | undefined (center)
+  
+  let popoverStyle = {};
+
+  if (mode === "dropdown" && anchorRect) {
+      // 1. DROPDOWN STYLE (Za Setup) - Ispod gumba
+      popoverStyle = {
+          position: "fixed",
+          top: anchorRect.bottom + 6,
+          left: anchorRect.left,
+          width: anchorRect.width,
+          minWidth: "200px",
+          maxHeight: "350px",
+          zIndex: 99999,
+          margin: 0,
+      };
+
+  } else if (mode === "troop" && anchorRect) {
+      // 2. TROOP STYLE (Za Grid) - Vertikalno centrirano, Horizontalno poravnato
+      popoverStyle = {
+          position: "fixed",
+          top: "50%", 
+          left: anchorRect.left,
+          width: anchorRect.width, 
+          minWidth: "250px", // Backup
+          maxWidth: "400px",
+          transform: "translateY(-50%)", // Vertikalno centriranje
+          maxHeight: "80vh",
+          zIndex: 99999,
+          margin: 0,
+      };
+
+  } else {
+      // 3. STANDARD CENTER (Results, Instructions)
+      popoverStyle = {
+          position: "relative",
+          width: "100%", 
+          maxWidth: 500,
+          maxHeight: "80vh",
+      };
+  }
+
+  const isOverlay = !mode; // Samo standard modal ima full screen overlay
+  // Ako je dropdown/troop, koristimo nevidljivi overlay ili prozirni da uhvatimo klik vani
+
+  return createPortal(
     <div
       onClick={onClose}
       style={{
         position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: isDropdown ? "center" : "center", // Dropdown na sredini radi lakseg klika
-        justifyContent: "center",
-        padding: 20,
-        zIndex: 9999, // <--- CRITICAL Z-INDEX FIX
-        backdropFilter: "blur(5px)",
+        inset: 0, 
+        // Ako je standard modal -> taman. Ako je dropdown/troop -> proziran (samo za close on click outside)
+        background: isOverlay ? "rgba(0,0,0,0.7)" : "transparent",
+        display: isOverlay ? "flex" : "block", // Flex za centriranje standardnog modala
+        alignItems: "center", justifyContent: "center",
+        padding: isOverlay ? 20 : 0, 
+        zIndex: 99990, 
+        backdropFilter: isOverlay ? "blur(5px)" : "none",
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "100%",
-          maxWidth: 500,
-          background: "linear-gradient(180deg, rgba(24,26,32,0.82) 0%, rgba(14,15,18,0.82) 100%)",
-          color: theme.text,
-          borderRadius: 16,
-          border: `1px solid ${theme.accent}`, // Zlatni okvir
-          boxShadow: `0 0 30px rgba(197, 160, 89, 0.18), ${theme.goldGlowStrong}`,
-          maxHeight: "80vh",
-          display: "flex",
-          flexDirection: "column",
+          ...popoverStyle,
+          background: "linear-gradient(180deg, rgba(28,30,36,0.99) 0%, rgba(14,15,18,0.99) 100%)",
+          color: theme.text, borderRadius: 12,
+          border: `1px solid ${theme.accent}`,
+          boxShadow: `0 10px 40px rgba(0,0,0,0.8), ${theme.goldGlowStrong}`,
+          display: "flex", flexDirection: "column",
+          overflow: "hidden"
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "16px 20px",
-            background: "rgba(197, 160, 89, 0.05)",
-            borderBottom: `1px solid ${theme.borderSoft}`,
-          }}
-        >
-          <div style={{ fontWeight: 700, fontSize: 18, fontFamily: "'Cinzel', serif", color: theme.accent, textTransform: "uppercase" }}>{title}</div>
-          <button
-            onClick={onClose}
-            style={{
-              border: "none",
-              background: "transparent",
-              color: theme.text,
-              width: 32,
-              height: 32,
-              fontSize: 24,
-              cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center"
-            }}
-          >
-            ✕
-          </button>
-        </div>
-        <div
-          style={{
-            padding: 16,
-            overflowY: "auto",
-            flex: 1,
-          }}
-        >
-          {children}
-        </div>
+        {/* HEADER */}
+        {mode !== "dropdown" && ( // Dropdown obično nema "X" header, ali trupe i modal imaju
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: "rgba(197, 160, 89, 0.05)", borderBottom: `1px solid ${theme.borderSoft}` }}>
+            <div style={{ fontWeight: 700, fontSize: 18, fontFamily: "'Cinzel', serif", color: theme.accent, textTransform: "uppercase" }}>{title}</div>
+            <button onClick={onClose} style={{ border: "none", background: "transparent", color: theme.text, width: 32, height: 32, fontSize: 24, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+            </div>
+        )}
+        
+        <div style={{ padding: mode === "dropdown" ? 6 : 16, overflowY: "auto", flex: 1 }}>{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -485,34 +432,42 @@ export default function App() {
   const isDark = usePrefersDark();
   const theme = useMemo(() => makeTheme(isDark), [isDark]);
 
+  const [introFinished, setIntroFinished] = useState(false);
+
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    const timer = setTimeout(() => {
+      setIntroFinished(true);
+    }, 1200); 
+    return () => clearTimeout(timer);
+  }, []);
+
   const citadelKeys = Object.keys(TB.citadels ?? {});
   const troops = TB.troops ?? [];
 
   const canon = useMemo(() => {
     const m = new Map();
     for (const t of troops) m.set(normName(t.name), t.name);
-    if (m.has(normName("Royal Lion I")))
-      m.set(normName("Royla Lion I"), m.get(normName("Royal Lion I")));
+    if (m.has(normName("Royal Lion I"))) m.set(normName("Royla Lion I"), m.get(normName("Royal Lion I")));
     return m;
   }, [troops]);
 
-  const troopByName = useMemo(
-    () => new Map(troops.map((t) => [t.name, t])),
-    [troops]
-  );
-
+  const troopByName = useMemo(() => new Map(troops.map((t) => [t.name, t])), [troops]);
   const additionalBonus = TB.additionalBonusNormal ?? {};
   const phoenixExtra = TB.phoenixExtra ?? {};
   const firstStrikerAllowed = TB.firstStrikerAllowed ?? {};
 
   const [citadelLevel, setCitadelLevel] = useState(citadelKeys[0] ?? "25");
   const [mode, setMode] = useState(MODE_WITHOUT);
-
   const [strikerTroops, setStrikerTroops] = useState(() => Array(9).fill(""));
   const [strikerBonusPct, setStrikerBonusPct] = useState(() => Array(9).fill(""));
   const [firstHealthBonusPct, setFirstHealthBonusPct] = useState("");
-
   const [warningMsg, setWarningMsg] = useState("");
+  const [orderWarningMsg, setOrderWarningMsg] = useState(false);
 
   const GROUP_KEYS = useMemo(() => (["CORAX","PHOENIX","PHH_SPEAR","DUEL_HK_SW","VULTURE","ROYAL_LION","GRIFFIN"]), []);
   const [groupBonusPct, setGroupBonusPct] = useState(() => ({
@@ -529,10 +484,8 @@ export default function App() {
     if (n.startsWith("vulture")) return "VULTURE";
     if (n.startsWith("royal lion")) return "ROYAL_LION";
     if (n.startsWith("griffin")) return "GRIFFIN";
-    if (n.startsWith("punisher") || n.startsWith("heavy halberdier") || n.startsWith("spearmen"))
-      return "PHH_SPEAR";
-    if (n.startsWith("duelist") || n.startsWith("heavy knight") || n.startsWith("swordsmen"))
-      return "DUEL_HK_SW";
+    if (n.startsWith("punisher") || n.startsWith("heavy halberdier") || n.startsWith("spearmen")) return "PHH_SPEAR";
+    if (n.startsWith("duelist") || n.startsWith("heavy knight") || n.startsWith("swordsmen")) return "DUEL_HK_SW";
     return null;
   };
 
@@ -574,22 +527,11 @@ export default function App() {
     return mode === MODE_WITH ? cit.m8m9Targets : cit.normalTargets;
   }, [cit, mode]);
 
-  const inputStyle = useMemo(
-    () => ({
-      padding: "12px 14px",
-      borderRadius: 10,
-      border: `1px solid ${theme.inputBorder}`,
-      background: theme.inputBg,
-      color: theme.text,
-      outline: "none",
-      WebkitAppearance: "none",
-      appearance: "none",
-      width: "100%",
-      boxSizing: "border-box", // 🛡️ Fix za širinu
-      fontSize: 16,
-      fontWeight: 500,
-      fontFamily: "'Inter', sans-serif",
-      transition: "border-color 0.2s, box-shadow 0.2s",
+  const inputStyle = useMemo(() => ({
+      padding: "12px 14px", borderRadius: 10, border: `1px solid ${theme.inputBorder}`,
+      background: theme.inputBg, color: theme.text, outline: "none",
+      WebkitAppearance: "none", appearance: "none", width: "100%", boxSizing: "border-box",
+      fontSize: 16, fontWeight: 500, fontFamily: "'Inter', sans-serif", transition: "border-color 0.2s, box-shadow 0.2s",
     }),
     [theme]
   );
@@ -706,11 +648,9 @@ export default function App() {
     else if (idx === 1) pool = secondAllowed;
     else pool = nonWallPool;
     const filtered = pool.filter((n) => !taken.has(normName(n)));
-    // Restriction: Manticore not allowed in Third Striker when mode is WITH (M8/M9)
     if (mode === MODE_WITH && idx === 2) {
       return ["", ...filtered.filter((n) => normName(n) !== normName("Manticore"))];
     }
-
     if (idx !== 1) return ["", ...filtered];
     return filtered;
   };
@@ -849,22 +789,35 @@ export default function App() {
     setResultsOpen(true);
   };
 
+  // --- ENTER KEY HANDLER ---
+  const handleEnter = (e, nextId) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const nextElement = document.getElementById(nextId);
+      if (nextElement) {
+        nextElement.focus();
+        if (nextElement.tagName === "INPUT") {
+          nextElement.select(); // Oznacava tekst za lakse prepisivanje
+        }
+      }
+    }
+  };
+
+  const handleInstructionsOpen = (e) => {
+    setHelpOpen(true);
+  };
+
   return (
     <div
+      className={`app-background ${introFinished ? "app-loaded" : "app-loading"}`}
       style={{
         width: "100%",
         minHeight: "100vh",
-        background: theme.pageBg,
-        // DODANA POZADINA
-        backgroundImage: "url('./bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundColor: theme.pageBg,
         color: theme.text,
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      {/* Overlay za čitljivost */}
       <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 0, pointerEvents: "none" }} />
 
       <style>{`
@@ -873,186 +826,338 @@ export default function App() {
         *, *::before, *::after { box-sizing: border-box; }
         :root { color-scheme: dark; }
 
-        /* Pro-gaming gold focus ring */
+        /* --- BACKGROUND LOGIC --- */
+        .app-background {
+          background-image: url('./bg.jpg');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          transition: background-image 0.3s ease-in-out;
+        }
+        @media (min-width: 768px) {
+          .app-background {
+            background-image: url('./bg-desktop.jpg');
+          }
+        }
+
+        /* --- INTRO ANIMATION STYLES (SPORIJE) --- */
+        
+        /* 1. Header se miče gore */
+        .header-wrapper {
+          transition: transform 2.0s cubic-bezier(0.25, 1, 0.5, 1);
+          will-change: transform;
+          position: relative; 
+          z-index: 10;
+        }
+
+        .app-loading .header-wrapper {
+          transform: translateY(40vh) scale(1.3);
+        }
+
+        .app-loaded .header-wrapper {
+          transform: translateY(0) scale(1);
+        }
+
+        /* 2. Content fade in */
+        .content-wrapper {
+          transition: opacity 1.8s ease 0.6s, transform 1.8s ease 0.6s;
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .app-loading .content-wrapper {
+          opacity: 0;
+          transform: translateY(50px);
+          pointer-events: none; 
+        }
+
+        /* 3. Mobile Button fade in */
+        .mobile-bottom-bar {
+          transition: opacity 1.8s ease 0.6s, transform 1.8s ease 0.6s;
+          opacity: 1;
+          transform: translateY(0);
+          box-sizing: border-box; 
+        }
+        .mobile-bottom-bar.hidden {
+          opacity: 0;
+          transform: translateY(20px);
+          pointer-events: none;
+        }
+
+        /* --- LAYOUT GRID SYSTEM --- */
+        .app-container {
+          width: 100%;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px 16px 100px 16px; /* 100px bottom for mobile button */
+          position: relative;
+          z-index: 1;
+        }
+
+        /* Desktop specific layout */
+        @media (min-width: 1100px) {
+          .app-container {
+            max-width: 1300px;
+            padding-bottom: 40px;
+          }
+
+          .main-layout-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start; /* KLJUČNO ZA STICKY SIDEBAR */
+          }
+
+          /* --- POPRAVAK ZA STICKY SIDEBAR --- */
+          .layout-sidebar {
+            position: sticky;
+            top: 20px;
+            align-self: start; 
+            z-index: 100; /* Iznad kartica ako dođe do scrolla */
+            height: fit-content;
+            max-height: calc(100vh - 40px); /* Da ne bude viši od ekrana */
+            overflow-y: auto; /* Scroll unutar sidebara ako je prevelik */
+            padding-right: 4px; /* Prostor za scrollbar */
+          }
+
+          .striker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+          }
+
+          /* Hide Mobile Bottom Bar on Desktop */
+          .mobile-bottom-bar {
+            display: none !important;
+          }
+
+          /* Show Desktop Calculate Button */
+          .desktop-calc-btn {
+            display: block !important;
+          }
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 1099px) {
+          .main-layout-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .striker-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .desktop-calc-btn {
+            display: none !important;
+          }
+        }
+
         input:focus, select:focus, button:focus {
           outline: none !important;
           border-color: rgba(197,160,89,0.85) !important;
           box-shadow: 0 0 0 2px rgba(197,160,89,0.35), 0 0 22px rgba(197,160,89,0.12) !important;
         }
 
-        /* Gold-styled selects (Android-friendly) */
-        .gm-select {
-          -webkit-appearance: none;
-          appearance: none;
-          padding-right: 44px !important;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%23c5a059' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-          background-repeat: no-repeat;
-          background-position: right 14px center;
-          background-size: 18px;
-        }
-        .gm-select option {
-          background: #0d0e10;
-          color: #ececec;
-        }
-
-        /* Scrollbar styles for modals */
-        /* Scrollbar styles for modals */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: ${theme.accent}; border-radius: 3px; }
       `}</style>
 
-      <div style={{ width: "100%", maxWidth: 600, margin: "0 auto", padding: "20px 16px", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <div style={{ 
-            fontWeight: 800, fontSize: 32, textAlign: "center", 
-            background: `linear-gradient(to bottom, #fff, ${theme.accent})`, 
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            fontFamily: "'Cinzel', serif", textTransform: "uppercase", letterSpacing: 2,
-            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
-          }}>
-            Citadel Calculator
-          </div>
-          <div style={{
-            marginTop: 6,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: 3,
-            textTransform: "uppercase",
-            color: theme.subtext,
-            opacity: 0.75,
-            fontFamily: "'Inter', sans-serif",
-          }}>
-            by GM
+      <div className="app-container">
+        
+        {/* HEADER WRAPPER ZA ANIMACIJU */}
+        <div className="header-wrapper">
+          <div style={{ textAlign: "center", marginBottom: 30 }}>
+            <div style={{ 
+              fontWeight: 800, fontSize: 32, textAlign: "center", 
+              background: `linear-gradient(to bottom, #fff, ${theme.accent})`, 
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              fontFamily: "'Cinzel', serif", textTransform: "uppercase", letterSpacing: 2,
+              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
+            }}>
+              Citadel Calculator
+            </div>
+            <div style={{
+              marginTop: 6, fontSize: 12, fontWeight: 800, letterSpacing: 3,
+              textTransform: "uppercase", color: theme.accent, opacity: 1, textShadow: "0 2px 10px rgba(0,0,0,0.8)", fontFamily: "'Inter', sans-serif",
+            }}>
+              by GM
+            </div>
           </div>
         </div>
 
-        <div style={{ display: "grid", gap: 16, paddingBottom: 100 }}>
-          <Card title="⚙️ Setup" theme={theme}>
-            <button
-              onClick={() => setHelpOpen(true)}
-              style={{
-                width: "100%", padding: "12px 16px", borderRadius: 10,
-                border: `1px solid ${theme.border}`, background: theme.btnGhostBg,
-                color: theme.text, fontWeight: 700, fontSize: 15, marginBottom: 16,
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              }}
-            >
-              <span>ℹ️</span> Instructions
-            </button>
+        {/* CONTENT WRAPPER ZA FADE IN */}
+        <div className="content-wrapper">
+          {/* --- MAIN GRID LAYOUT START --- */}
+          <div className="main-layout-grid">
+            
+            {/* LEFT SIDEBAR (Setup Only) - SADA JE STICKY */}
+            <div className="layout-sidebar">
+              <Card title="⚙️ Setup" theme={theme}>
+                <button
+                  onClick={handleInstructionsOpen}
+                  style={{
+                    width: "100%", padding: "12px 16px", borderRadius: 10,
+                    border: `1px solid ${theme.border}`, background: theme.btnGhostBg,
+                    color: theme.text, fontWeight: 700, fontSize: 15, marginBottom: 16,
+                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  }}
+                >
+                  <span>ℹ️</span> Instructions
+                </button>
 
-            <div style={{ display: "grid", gap: 16 }}>
-              {/* Koristi custom modal picker da Setup izgleda identično kao ostale kartice (i da izbjegnemo Android native popup) */}
-              <OptionPicker
-                label="Do you have M8/M9 troops?"
-                value={mode}
-                options={[
-                  { value: MODE_WITHOUT, label: "No" },
-                  { value: MODE_WITH, label: "Yes" },
-                ]}
-                onChange={(v) => handleModeChange(v)}
-                theme={theme}
-                inputStyle={inputStyle}
-              />
+                <div style={{ display: "grid", gap: 16 }}>
+                  <OptionPicker
+                    label="Do you have M8/M9 troops?"
+                    value={mode}
+                    options={[{ value: MODE_WITHOUT, label: "No" }, { value: MODE_WITH, label: "Yes" }]}
+                    onChange={(v) => handleModeChange(v)}
+                    theme={theme} inputStyle={inputStyle}
+                  />
+                  <OptionPicker
+                    label="Citadel Level"
+                    value={citadelLevel}
+                    options={citadelKeys.map((lvl) => ({ value: lvl, label: `Elven ${lvl}` }))}
+                    onChange={(v) => { setCitadelLevel(v); setCalcOutput(null); setResultsOpen(false); }}
+                    theme={theme} inputStyle={inputStyle}
+                  />
+                  <button onClick={resetSelections}
+                    style={{
+                      width: "100%", padding: "12px 16px", borderRadius: 10,
+                      border: `1px solid ${theme.danger}`, background: "rgba(255, 77, 77, 0.15)",
+                      color: "#ff6b6b", fontWeight: 700, fontSize: 14, cursor: "pointer", marginTop: 8,
+                    }}
+                  >
+                    Reset Troops Selection
+                  </button>
+                </div>
+              </Card>
 
-              <OptionPicker
-                label="Citadel Level"
-                value={citadelLevel}
-                options={citadelKeys.map((lvl) => ({ value: lvl, label: `Elven ${lvl}` }))}
-                onChange={(v) => {
-                  setCitadelLevel(v);
-                  setCalcOutput(null);
-                  setResultsOpen(false);
-                }}
-                theme={theme}
-                inputStyle={inputStyle}
-              />
-
-              <button onClick={resetSelections}
+              {/* DESKTOP CALCULATE BUTTON - STICKY ZAJEDNO SA SETUPOM */}
+              <button 
+                id="btn-calculate-desktop"
+                className="desktop-calc-btn" 
+                onClick={showResults} 
                 style={{
-                  width: "100%", padding: "12px 16px", borderRadius: 10,
-                  border: `1px solid ${theme.danger}`, background: "rgba(255, 77, 77, 0.15)",
-                  color: "#ff6b6b", fontWeight: 700, fontSize: 14, cursor: "pointer", marginTop: 8,
+                  width: "100%", padding: "20px", borderRadius: 12, border: "none",
+                  background: theme.btnBg, color: theme.btnText,
+                  fontWeight: 900, letterSpacing: 1, fontSize: 20, fontFamily: "'Cinzel', serif",
+                  boxShadow: `0 0 25px rgba(197, 160, 89, 0.45)`, cursor: "pointer",
+                  transition: "transform 0.2s",
+                  marginTop: 16,
                 }}
               >
-                Reset Troops Selection
+                CALCULATE RESULTS
               </button>
             </div>
-          </Card>
 
-          <Card title="🛡️ Wall Killer" theme={theme}>
-            <div style={{ display: "grid", gap: 16 }}>
-              <TroopPicker
-                label="Select Troop" value={wallKillerTroop} options={wallKillerPool}
-                onChange={(v) => { setWallKillerTroop(v); setCalcOutput(null); setResultsOpen(false); }}
-                theme={theme} inputStyle={inputStyle}
-              />
-              <label style={{ display: "grid", gap: 8 }}>
-                <span style={{ color: theme.subtext, fontWeight: 600, fontSize: 13, textTransform: "uppercase" }}>Strength Bonus (%)</span>
-                <input type="number" step="any" inputMode="decimal" placeholder="0" value={wallKillerBonusPct}
-                  onChange={(e) => { setWallKillerBonusPct(e.target.value); setCalcOutput(null); setResultsOpen(false); }}
-                  style={inputStyle} onFocus={(e) => e.target.select()}
-                />
-              </label>
-              <div style={{ background: "rgba(0,0,0,0.42)", padding: "12px 16px", borderRadius: 10, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
-                  <Row label="Effective Bonus" value={`${fmtInt(wallKiller.effBonus)}%`} theme={theme} accent />
-                  <Row label="Required Troops" value={fmtInt(wallKiller.requiredTroops)} theme={theme} accent />
-              </div>
-            </div>
-          </Card>
-
-          {perStriker.map((s) => {
-            const idx = s.idx;
-            const isFirst = idx === 0;
-            const opts = optionsForIdx(idx);
-
-            return (
-              <Card key={idx} title={`${idx + 1}. ${s.label}`} theme={theme}>
+            {/* RIGHT CONTENT (Wall Killer + Striker Grid) */}
+            <div className="striker-grid">
+              
+              {/* WALL KILLER */}
+              <Card title="🛡️ Wall Killer" theme={theme}>
                 <div style={{ display: "grid", gap: 16 }}>
                   <TroopPicker
-                    label="Select Troop" value={strikerTroops[idx]} options={opts}
-                    onChange={(v) => handleTroopChange(idx, v)} theme={theme} inputStyle={inputStyle}
+                    label="Select Troop" value={wallKillerTroop} options={wallKillerPool}
+                    onChange={(v) => { setWallKillerTroop(v); setCalcOutput(null); setResultsOpen(false); }}
+                    theme={theme} inputStyle={inputStyle}
                   />
-
-                  {isFirst && (
-                    <label style={{ display: "grid", gap: 8 }}>
-                      <span style={{ color: "#ff8a8a", fontWeight: 700, fontSize: 13, textTransform: "uppercase" }}>Health Bonus (%)</span>
-                      <input type="number" step="any" inputMode="decimal" placeholder="0" value={firstHealthBonusPct}
-                        onChange={(e) => { setFirstHealthBonusPct(e.target.value); setCalcOutput(null); setResultsOpen(false); }}
-                        style={{...inputStyle, borderColor: "rgba(255, 138, 138, 0.4)"}} onFocus={(e) => e.target.select()}
-                      />
-                    </label>
-                  )}
-
                   <label style={{ display: "grid", gap: 8 }}>
-                    <span style={{ color: "#80d8ff", fontWeight: 700, fontSize: 13, textTransform: "uppercase" }}>Strength Bonus (%)</span>
-                    <input type="number" step="any" inputMode="decimal" placeholder="0" value={strikerBonusPct[idx]}
-                      onChange={(e) => setBonusAt(idx, e.target.value)}
-                      style={{...inputStyle, borderColor: "rgba(128, 216, 255, 0.4)"}} onFocus={(e) => e.target.select()}
+                    <span style={{ color: theme.subtext, fontWeight: 600, fontSize: 13, textTransform: "uppercase" }}>Strength Bonus (%)</span>
+                    <input 
+                      id="bonus-wall"
+                      type="number" step="any" inputMode="decimal" placeholder="0" value={wallKillerBonusPct}
+                      onChange={(e) => { setWallKillerBonusPct(e.target.value); setCalcOutput(null); setResultsOpen(false); }}
+                      onKeyDown={(e) => handleEnter(e, "bonus-health-0")}
+                      style={inputStyle} onFocus={(e) => e.target.select()}
                     />
                   </label>
-
                   <div style={{ background: "rgba(0,0,0,0.42)", padding: "12px 16px", borderRadius: 10, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
-                      <Row label="Effective Bonus" value={`${fmtInt(s.effBonus)}%`} theme={theme} accent />
-                      <Row label="Required Troops" value={fmtInt(s.requiredTroops)} theme={theme} accent />
-                      {isFirst && (
-                      <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${theme.borderSoft}` }}>
-                          <Row label="Citadel First Strike Losses" value={fmtInt(firstDeaths)} theme={theme} />
-                      </div>
-                      )}
+                      <Row label="Effective Bonus" value={`${fmtInt(wallKiller.effBonus)}%`} theme={theme} accent />
+                      <Row label="Required Troops" value={fmtInt(wallKiller.requiredTroops)} theme={theme} accent />
                   </div>
                 </div>
               </Card>
-            );
-          })}
-        </div>
 
-        <div style={{
-            position: "fixed", left: 0, right: 0, bottom: 8, padding: 16,
+              {/* STRIKERS LOOP */}
+              {perStriker.map((s) => {
+                const idx = s.idx;
+                const isFirst = idx === 0;
+                const opts = optionsForIdx(idx);
+                const nextInputId = idx < 8 ? `bonus-str-${idx + 1}` : "btn-calculate-desktop";
+
+                // 🛡️ LOGIKA ZA LOCKED: Ako nije First Striker, a First Striker je prazan -> LOCKED
+                const isFirstStrikerSelected = !!strikerTroops[0];
+                const isLocked = !isFirst && !isFirstStrikerSelected;
+
+                return (
+                  <Card key={idx} title={`${idx + 1}. ${s.label}`} theme={theme}>
+                    <div style={{ display: "grid", gap: 16 }}>
+                      <TroopPicker
+                        label="Select Troop" value={strikerTroops[idx]} options={opts}
+                        onChange={(v) => handleTroopChange(idx, v)} theme={theme} inputStyle={inputStyle}
+                        locked={isLocked} // <--- LOCKED UMJESTO DISABLED
+                        onLockedClick={() => setOrderWarningMsg(true)} // <--- OTVORI POPUP
+                      />
+
+                      {isFirst && (
+                        <label style={{ display: "grid", gap: 8 }}>
+                          <span style={{ color: "#ff8a8a", fontWeight: 700, fontSize: 13, textTransform: "uppercase" }}>Health Bonus (%)</span>
+                          <input 
+                            id="bonus-health-0"
+                            type="number" step="any" inputMode="decimal" placeholder="0" value={firstHealthBonusPct}
+                            onChange={(e) => { setFirstHealthBonusPct(e.target.value); setCalcOutput(null); setResultsOpen(false); }}
+                            onKeyDown={(e) => handleEnter(e, "bonus-str-0")}
+                            style={{...inputStyle, borderColor: "rgba(255, 138, 138, 0.4)"}} onFocus={(e) => e.target.select()}
+                          />
+                        </label>
+                      )}
+
+                      <label style={{ display: "grid", gap: 8 }}>
+                        <span style={{ color: "#80d8ff", fontWeight: 700, fontSize: 13, textTransform: "uppercase" }}>Strength Bonus (%)</span>
+                        <input 
+                          id={`bonus-str-${idx}`}
+                          type="number" step="any" inputMode="decimal" placeholder="0" value={strikerBonusPct[idx]}
+                          onChange={(e) => setBonusAt(idx, e.target.value)}
+                          onKeyDown={(e) => handleEnter(e, nextInputId)}
+                          readOnly={isLocked} // <--- READONLY UMJESTO DISABLED
+                          onClick={() => isLocked && setOrderWarningMsg(true)} // <--- KLIK OTVARA POPUP
+                          style={{...inputStyle, borderColor: "rgba(128, 216, 255, 0.4)"}} onFocus={(e) => e.target.select()}
+                        />
+                      </label>
+
+                      <div style={{ background: "rgba(0,0,0,0.42)", padding: "12px 16px", borderRadius: 10, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
+                          <Row label="Effective Bonus" value={`${fmtInt(s.effBonus)}%`} theme={theme} accent />
+                          <Row label="Required Troops" value={fmtInt(s.requiredTroops)} theme={theme} accent />
+                          {isFirst && (
+                          <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${theme.borderSoft}` }}>
+                              <Row label="Citadel First Strike Losses" value={fmtInt(firstDeaths)} theme={theme} />
+                          </div>
+                          )}
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+            {/* END RIGHT CONTENT */}
+          </div>
+          {/* --- MAIN GRID LAYOUT END --- */}
+        </div>
+        {/* END CONTENT WRAPPER */}
+
+        {/* MOBILE BOTTOM BAR (Visible only on Mobile) - IZVUČEN IZVAN CONTENT WRAPPERA ZA FIX POZICIJU */}
+        <div className={`mobile-bottom-bar ${introFinished ? "visible" : "hidden"}`} style={{
+            position: "fixed", left: 0, width: "100%", bottom: 9, padding: 16, // FIX: width 100% instead of right:0
             background: "transparent", borderTop: "none", backdropFilter: "none", zIndex: 99
           }}>
           <div style={{ width: "100%", maxWidth: 600, margin: "0 auto" }}>
-            <button onClick={showResults} style={{
+            <button 
+              id="btn-calculate-mobile"
+              onClick={showResults} 
+              style={{
                 width: "100%", padding: "16px", borderRadius: 12, border: "none",
                 background: theme.btnBg, color: theme.btnText,
                 fontWeight: 900, letterSpacing: 1, fontSize: 18, fontFamily: "'Cinzel', serif",
@@ -1070,6 +1175,15 @@ export default function App() {
           <button onClick={() => setWarningMsg("")} style={{ width: "100%", marginTop: 24, padding: "14px", borderRadius: 10, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 16, cursor: "pointer" }}>OK</button>
         </Modal>
 
+        {/* --- NOVI POPUP ZA REDOSLIJED --- */}
+        <Modal open={orderWarningMsg} title="⛔ Action Required" onClose={() => setOrderWarningMsg(false)} theme={theme}>
+          <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, color: theme.text, fontSize: 16 }}>
+            You must select the <b style={{color: theme.accent}}>First Striker</b> before selecting other troops.
+          </div>
+          <button onClick={() => setOrderWarningMsg(false)} style={{ width: "100%", marginTop: 24, padding: "14px", borderRadius: 10, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 16, cursor: "pointer" }}>OK</button>
+        </Modal>
+
+        {/* --- INSTRUCTIONS MODAL (VRAĆEN NA STANDARD) --- */}
         <Modal open={helpOpen} title="ℹ️ Instructions & Help" onClose={() => setHelpOpen(false)} theme={theme}>
           <div style={{ color: theme.text, lineHeight: 1.6, fontSize: 15, display: "grid", gap: 20 }}>
             <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>🎯 Goal</div><div style={{ color: theme.subtext }}>Use the correct troops and bonuses to minimize losses when attacking a Citadel. I took care of the proper troops selection.</div></div>
@@ -1100,7 +1214,6 @@ export default function App() {
                 <span>📄</span> Copy List to Clipboard
               </button>
               {copyNotice ? <div style={{ textAlign: "center", marginBottom: 16, color: theme.accent, fontWeight: 700 }}>{copyNotice}</div> : null}
-              
               <div style={{ display: "grid", gap: 8 }}>
               {calcOutput.troops.map((l, i) => (
                 <div key={i} style={{ padding: "12px 16px", background: theme.cardBg, borderRadius: 12, border: `1px solid ${theme.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: `${theme.shadow}, ${theme.goldGlow}` }}>
@@ -1120,7 +1233,6 @@ export default function App() {
       <footer className="app-footer">
         © 2026 Game01Master · Non-commercial license
       </footer>
-
-</div>
+    </div>
   );
 }
