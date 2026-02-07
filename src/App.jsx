@@ -11,7 +11,7 @@ document.head.appendChild(fontLink);
 const MODE_WITHOUT = "WITHOUT";
 const MODE_WITH = "WITH";
 
-// Konstanta za petlju (STRIKER_LABELS mora biti definirana prije uporabe)
+// Konstanta za petlju
 const STRIKER_LABELS = [
   "First Striker",
   "Second Striker",
@@ -959,6 +959,7 @@ export default function App() {
     setResultsOpen(false);
   }, [mode, citadelLevel, poolAll.join("|"), wallKillerPool.join("|"), firstAllowed.join("|")]);
 
+  // --- LOGIKA ZA FILTRIRANJE TRUPA PO POZICIJAMA ---
   const optionsForIdx = (idx) => {
     const taken = new Set(strikerTroops.filter((_, i) => i !== idx).filter(Boolean).map(normName));
     let pool;
@@ -966,11 +967,28 @@ export default function App() {
     else if (idx === 1) pool = secondAllowed;
     else pool = nonWallPool;
     const filtered = pool.filter((n) => !taken.has(normName(n)));
-    if (mode === MODE_WITH && idx === 2) {
-      return ["", ...filtered.filter((n) => normName(n) !== normName("Manticore"))];
+    
+    let result = filtered;
+
+    // 1. ZABRANA: Epic Monster Hunter ne smije biti 1., 2. ili 3. napadač (indeksi 0, 1, 2)
+    // Može se birati tek od Cleanup 1 (indeks 3) nadalje
+    if (idx <= 2) {
+       result = result.filter(n => normName(n) !== normName("Epic Monster Hunter"));
     }
-    if (idx !== 1) return ["", ...filtered];
-    return filtered;
+
+    // 2. ZABRANA: U "With M8" modu Manticore ne smije biti 3. napadač (indeks 2)
+    if (mode === MODE_WITH && idx === 2) {
+       result = result.filter(n => normName(n) !== normName("Manticore"));
+    }
+
+    // 3. ZABRANA: U "Without M8" modu, određene pješačke jedinice ne smiju biti 3. napadač
+    if (mode === MODE_WITHOUT && idx === 2) {
+        const excluded = ["Punisher I", "Heavy Halberdier VII", "Heavy Halberdier VI", "Duelist I", "Heavy Knight VII", "Heavy Knight VI", "Spearmen V", "Swordsmen V"];
+        result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
+    }
+
+    if (idx !== 1) return ["", ...result];
+    return result;
   };
 
   const setTroopAt = (idx, name) => {
@@ -1081,6 +1099,13 @@ export default function App() {
       const dmgPerTroop = baseStrength * (1 + effBonus / 100);
       const targetHP = toNum(targets[idx]);
       let required = dmgPerTroop > 0 ? Math.floor(targetHP / dmgPerTroop) : 0;
+      
+      // LOGIKA ZA SMANJENJE EPIC MONSTER HUNTERA (Samo ako je cleanup > 2)
+      // I ako je odabran (što je moguće samo na pozicijama 3+)
+      if (idx > 2 && normName(troopName) === normName("Epic Monster Hunter")) {
+         required = Math.max(0, required - 5);
+      }
+
       if (idx === 0 && dmgPerTroop > 0) required += firstDeaths + 10;
       return { idx, label, troopName, effBonus, requiredTroops: required };
     });
@@ -1200,7 +1225,7 @@ export default function App() {
         input:focus, select:focus, button:focus { outline: none !important; border-color: rgba(197,160,89,0.85) !important; box-shadow: 0 0 0 2px rgba(197,160,89,0.35), 0 0 22px rgba(197,160,89,0.12) !important; }
 
         /* FOOTER STYLE - SA PADDING FIXOM */
-        .app-footer { text-align: center; padding: 4px; font-size: 14px; color: ${theme.subtext}; opacity: 0.6; }
+        .app-footer { text-align: center; padding: 4px; font-size: 14px; color: ${theme.subtext}; opacity: 0.9; }
         @media (min-width: 1100px) { .app-footer { padding-bottom: 18px; } }
 
         ::-webkit-scrollbar { width: 6px; }
