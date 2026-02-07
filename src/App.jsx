@@ -826,6 +826,25 @@ export default function App() {
         *, *::before, *::after { box-sizing: border-box; }
         :root { color-scheme: dark; }
 
+        /* --- CSS POPRAVCI ZA SCROLL --- */
+        
+        /* 1. Uvijek rezerviraj mjesto za vertikalni scrollbar */
+        html {
+           overflow-y: scroll; 
+        }
+
+        /* 2. Desktop: overflow-x visible da sticky radi */
+        html, body {
+           overflow-x: visible; 
+        }
+
+        /* 3. Mobile: Sakrij horizontalni scroll */
+        @media (max-width: 1099px) {
+           html, body {
+             overflow-x: hidden;
+           }
+        }
+
         /* --- BACKGROUND LOGIC --- */
         .app-background {
           background-image: url('./bg.jpg');
@@ -840,22 +859,21 @@ export default function App() {
           }
         }
 
-        /* --- INTRO ANIMATION STYLES (SPORIJE) --- */
-        
-        /* 1. Header se miče gore */
+        /* --- INTRO ANIMATION STYLES --- */
         .header-wrapper {
           transition: transform 2.0s cubic-bezier(0.25, 1, 0.5, 1);
           will-change: transform;
           position: relative; 
           z-index: 10;
         }
-
+        
+        /* SCALE JE UKLONJEN - OVO RJEŠAVA HORIZONTALNI SCROLL */
         .app-loading .header-wrapper {
-          transform: translateY(40vh) scale(1.3);
+          transform: translateY(40vh); 
         }
 
         .app-loaded .header-wrapper {
-          transform: translateY(0) scale(1);
+          transform: translateY(0);
         }
 
         /* 2. Content fade in */
@@ -908,7 +926,7 @@ export default function App() {
             align-items: start; /* KLJUČNO ZA STICKY SIDEBAR */
           }
 
-          /* --- POPRAVAK ZA STICKY SIDEBAR --- */
+          /* --- STICKY SIDEBAR --- */
           .layout-sidebar {
             position: sticky;
             top: 20px;
@@ -960,6 +978,22 @@ export default function App() {
           box-shadow: 0 0 0 2px rgba(197,160,89,0.35), 0 0 22px rgba(197,160,89,0.12) !important;
         }
 
+        /* Global footer style */
+        .app-footer {
+          text-align: center;
+          padding: 4px; /* Baza je 20px sa svih strana */
+          font-size: 14px;
+          color: ${theme.subtext};
+          opacity: 0.6;
+        }
+
+        @media (min-width: 1100px) {
+          /* Desktop verzija: Dodajemo 14px dolje (ukupno 18px) da gurnemo tekst gore */
+          .app-footer {
+            padding-bottom: 18px; 
+          }
+        }
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: ${theme.accent}; border-radius: 3px; }
@@ -967,7 +1001,7 @@ export default function App() {
 
       <div className="app-container">
         
-        {/* HEADER WRAPPER ZA ANIMACIJU */}
+        {/* HEADER WRAPPER - BEZ SCALINGA */}
         <div className="header-wrapper">
           <div style={{ textAlign: "center", marginBottom: 30 }}>
             <div style={{ 
@@ -993,7 +1027,7 @@ export default function App() {
           {/* --- MAIN GRID LAYOUT START --- */}
           <div className="main-layout-grid">
             
-            {/* LEFT SIDEBAR (Setup Only) - SADA JE STICKY */}
+            {/* LEFT SIDEBAR (Setup Only) - STICKY NA DESKTOPU */}
             <div className="layout-sidebar">
               <Card title="⚙️ Setup" theme={theme}>
                 <button
@@ -1192,7 +1226,7 @@ export default function App() {
             <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>⚔️ Captains</div><div style={{ color: theme.subtext }}>Recommended: <b style={{ color: theme.text }}> Wu Zetian, Brunhild, Skadi, Beowulf, Aydae, Ramses, Sofia</b>.</div></div>
             <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>✨ Artifacts</div><div style={{ color: theme.subtext }}>Use artifacts that increase Health for <b style={{ color: theme.text }}> Flying</b>, <b style={{ color: theme.text }}> Guardsmen</b>, or the <b style={{ color: theme.text }}> Army</b>.</div></div>
             <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>🔄 Recalculate</div><div style={{ color: theme.subtext }}>After ANY strength bonus change, enter new bonuses and press <b style={{ color: theme.text }}> Calculate</b> again. Small changes matter!</div></div>
-            <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>❓ How to find bonuses?</div><div style={{ color: theme.subtext }}>Attack a level 10 Citadel with <b style={{ color: theme.text }}>10 of each selected troop type</b>. Copy the bonuses from the attack report into the calculator.</div></div>
+            <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>❓ How to find bonuses?</div><div style={{ color: theme.subtext }}>Attack a level 10 Citadel with <b style={{ color: theme.text }}>10 of each selected troop type</b>. Copy the bonuses from the attack report into the calculator.<br /><br />Or select the captains, equipment, and artifacts. Send the hero and dragon to the fort and copy the bonuses from the barracks.</div></div>
           </div>
         </Modal>
 
