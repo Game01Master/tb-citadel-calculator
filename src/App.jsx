@@ -1495,7 +1495,7 @@ export default function App() {
                 }}
                 style={{ width: "100%", padding: "14px", borderRadius: 12, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 16, marginBottom: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
               >
-                <span>📄</span> {t('copy_btn')}
+                <span></span> {t('copy_btn')}
               </button>
               {copyNotice ? <div style={{ textAlign: "center", marginBottom: 16, color: theme.accent, fontWeight: 700 }}>{copyNotice}</div> : null}
               <div style={{ display: "grid", gap: 8 }}>
