@@ -1,0 +1,285 @@
+{
+  "citadels": {
+    "25": {
+      "firstStrikeDamage": 115200000,
+      "wallHP": 957000000,
+      "normalTargets": [
+        345600000,
+        105780000,
+        78000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000
+      ],
+      "m8m9Targets": [
+        345600000,
+        158000000,
+        78000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000,
+        77000000
+      ]
+    },
+    "30": {
+      "firstStrikeDamage": 552000000,
+      "wallHP": 4050000000,
+      "normalTargets": [
+        1656000000,
+        516600000,
+        382200000,
+        380800000,
+        38080000,
+        380800000,
+        380800000,
+        380800000,
+        380800000
+      ],
+      "m8m9Targets": [
+        1656000000,
+        788000000,
+        382200000,
+        380800000,
+        380800000,
+        380800000,
+        380800000,
+        380800000,
+        380800000
+      ]
+    }
+  },
+  "troops": [
+     {
+      "name": "Corax II",
+      "strength": 110200,
+      "health": 330600,
+      "fortBonus": null
+    },
+    {
+      "name": "Corax I",
+      "strength": 61200,
+      "health": 183600,
+      "fortBonus": null
+    },
+    {
+      "name": "Punisher I",
+      "strength": 3060,
+      "health": 9180,
+      "fortBonus": null
+    },
+    {
+      "name": "Griffin VII",
+      "strength": 34000,
+      "health": 102000,
+      "fortBonus": null
+    },
+    {
+      "name": "Heavy Halberdier VII",
+      "strength": 1700,
+      "health": 5100,
+      "fortBonus": null
+    },
+    {
+      "name": "Griffin VI",
+      "strength": 19000,
+      "health": 57000,
+      "fortBonus": null
+    },
+    {
+      "name": "Heavy Halberdier VI",
+      "strength": 940,
+      "health": 2820,
+      "fortBonus": null
+    },
+    {
+      "name": "Griffin V",
+      "strength": 10000,
+      "health": 30000,
+      "fortBonus": null
+    },
+    {
+      "name": "Spearmen V",
+      "strength": 520,
+      "health": 1560,
+      "fortBonus": null
+    },
+    {
+      "name": "Royal Lion II",
+      "strength": 110200,
+      "health": 330600,
+      "fortBonus": null
+    },
+    {
+      "name": "Royal Lion I",
+      "strength": 61200,
+      "health": 183600,
+      "fortBonus": null
+    },
+    {
+      "name": "Duelist I",
+      "strength": 3060,
+      "health": 9180,
+      "fortBonus": null
+    },
+    {
+      "name": "Vulture VII",
+      "strength": 1700,
+      "health": 5100,
+      "fortBonus": null
+    },
+    {
+      "name": "Heavy Knight VII",
+      "strength": 1700,
+      "health": 5100,
+      "fortBonus": null
+    },
+    {
+      "name": "Vulture VI",
+      "strength": 940,
+      "health": 2820,
+      "fortBonus": null
+    },
+    {
+      "name": "Heavy Knight VI",
+      "strength": 940,
+      "health": 2820,
+      "fortBonus": null
+    },
+    {
+      "name": "Vulture V",
+      "strength": 520,
+      "health": 1560,
+      "fortBonus": null
+    },
+    {
+      "name": "Swordsmen V",
+      "strength": 520,
+      "health": 1560,
+      "fortBonus": null
+    },
+    {
+      "name": "Wyvern",
+      "strength": 690000,
+      "health": 2070000,
+      "fortBonus": null
+    },
+    {
+      "name": "Warregal",
+      "strength": 220000,
+      "health": 660000,
+      "fortBonus": null
+    },
+    {
+      "name": "Jago",
+      "strength": 220000,
+      "health": 660000,
+      "fortBonus": null
+    },
+    {
+      "name": "Epic Monster Hunter",
+      "strength": 25000,
+      "health": 75000,
+      "fortBonus": null
+    },
+    {
+      "name": "Ariel",
+      "strength": 55000,
+      "health": 330000,
+      "fortBonus": 1667
+    },
+    {
+      "name": "Josephine II",
+      "strength": 27550,
+      "health": 165300,
+      "fortBonus": 1667
+    },
+    {
+      "name": "Josephine I",
+      "strength": 15310,
+      "health": 91800,
+      "fortBonus": 1111
+    },
+    {
+      "name": "Siege Ballistae VII",
+      "strength": 8500,
+      "health": 51000,
+      "fortBonus": 740
+    },
+    {
+      "name": "Siege Ballistae VI",
+      "strength": 4730,
+      "health": 28400,
+      "fortBonus": 494
+    },
+    {
+      "name": "Catapult V",
+      "strength": 2630,
+      "health": 15800,
+      "fortBonus": 329
+    },
+    {
+      "name": "Catapult IV",
+      "strength": 1460,
+      "health": 8750,
+      "fortBonus": 219
+    },
+       {
+      "name": "Catapult III",
+      "strength": 810,
+      "health": 4860,
+      "fortBonus": 146
+    },
+    {
+      "name": "Fire Phoenix II",
+      "strength": 1190000,
+      "health": 3570000,
+      "fortBonus": null
+    },
+    {
+      "name": "Fire Phoenix I",
+      "strength": 660000,
+      "health": 1980000,
+      "fortBonus": null
+    },
+    {
+      "name": "Manticore",
+      "strength": 46000,
+      "health": 138000,
+      "fortBonus": null
+    }
+  ],
+  "additionalBonusNormal": {
+    "Punisher I": 1367,
+    "Heavy Halberdier VII": 911,
+    "Heavy Halberdier VI": 608,
+    "Duelist I": 683,
+    "Heavy Knight VII": 456,
+    "Heavy Knight VI": 304,
+    "Spearmen V":405,
+    "Swordsmen V": 203
+  },
+  "phoenixExtra": {
+    "Fire Phoenix I": 701,
+    "Fire Phoenix II": 1051
+  },
+  "firstStrikerAllowed": {
+    "WITHOUT": [
+      "Corax I",
+      "Griffin VII",
+      "Griffin VI",
+      "Griffin V"
+    ],
+    "WITH": [
+      "Corax II",
+      "Corax I",
+      "Griffin VII",
+      "Royal Lion II",
+      "Royal Lion I"
+    ]
+  }
+}
