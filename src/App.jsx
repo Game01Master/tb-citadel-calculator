@@ -1150,7 +1150,7 @@ export default function App() {
       }
     }
     setCalcOutput({
-      modeLabel: mode === MODE_WITH ? t('yes') : t('no'),
+      modeLabel: mode === MODE_WITH ? t('With M8/M9') : t('Without M8/M9'),
       citadelLabel: `Elven ${citadelLevel}`,
       troops: ordered,
     });
