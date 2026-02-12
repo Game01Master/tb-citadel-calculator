@@ -1524,8 +1524,8 @@ html, body {
           {calcOutput ? (
             <>
               <div style={{ background: "rgba(0,0,0,0.32)", padding: 16, borderRadius: 12, marginBottom: 20, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
-                  <Row label={t('mode_label')} value={calcOutput.modeLabel} theme={theme} accent />
-                  <Row label={t('citadel_label')} value={calcOutput.citadelLabel} theme={theme} accent />
+                  <Row label="Mode" value={calcOutput.modeLabel} theme={theme} accent />
+                  <Row label="Citadel" value={calcOutput.citadelLabel} theme={theme} accent />
               </div>
               <button onClick={async () => {
                   const list = (calcOutput.lines || calcOutput.troops || []).map((t) => `${t.troop} - ${fmtInt(t.required)}`).join("\n");
