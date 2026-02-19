@@ -994,7 +994,7 @@ export default function App() {
 
     // 2. ZABRANA: U "With M8" modu Manticore ne smije biti 3. napadač (indeks 2)
     if (mode === MODE_WITH && idx === 2) {
-       result = result.filter(n => normName(n) !== normName("Manticore"));
+       result = result.filter(n => normName(n) !== normName("Fire Phoenix I", "Fire Phoenix II", "Manticore"));
     }
 
     // 3. ZABRANA: U "Without M8" modu, određene pješačke jedinice ne smiju biti 3. napadač
