@@ -992,10 +992,11 @@ export default function App() {
        result = result.filter(n => normName(n) !== normName("Epic Monster Hunter"));
     }
 
-    // 2. ZABRANA: U "With M8" modu Manticore ne smije biti 3. napadač (indeks 2)
-    if (mode === MODE_WITH && idx === 2) {
-       result = result.filter(n => normName(n) !== normName("Fire Phoenix I", "Fire Phoenix II", "Manticore"));
-    }
+    // 2. ZABRANA: U "With M8" modu određene jedinice ne smiju biti 3. napadač (indeks 2)
+if (mode === MODE_WITH && idx === 2) {
+  const excluded = ["Manticore", "Fire Phoenix I", "Fire Phoenix II"];
+  result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
+}
 
     // 3. ZABRANA: U "Without M8" modu, određene pješačke jedinice ne smiju biti 3. napadač
     if (mode === MODE_WITHOUT && idx === 2) {
