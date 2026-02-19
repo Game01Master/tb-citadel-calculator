@@ -994,7 +994,7 @@ export default function App() {
 
     // 2. ZABRANA: U "With M8" modu određene jedinice ne smiju biti 3. napadač (indeks 2)
 if (mode === MODE_WITH && idx === 2) {
-  const excluded = ["Manticore", "Fire Phoenix I", "Fire Phoenix II"];
+  const excluded = ["Manticore", "Fire Phoenix I", "Fire Phoenix II", "Wyvern"];
   result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
 }
 
