@@ -1000,7 +1000,7 @@ if (mode === MODE_WITH && idx === 2) {
 
     // 3. ZABRANA: U "Without M8" modu, određene pješačke jedinice ne smiju biti 3. napadač
     if (mode === MODE_WITHOUT && idx === 2) {
-        const excluded = ["Punisher I", "Heavy Halberdier VII", "Heavy Halberdier VI", "Duelist I", "Heavy Knight VII", "Heavy Knight VI", "Spearmen V", "Swordsmen V"];
+        const excluded = ["Punisher I", "Heavy Halberdier VII", "Heavy Halberdier VI", "Duelist I", "Heavy Knight VII", "Heavy Knight VI", "Spearmen V", "Swordsmen V", "Wyvern"];
         result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
     }
 
