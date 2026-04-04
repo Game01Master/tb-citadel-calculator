@@ -1,14 +1,20 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="manifest" href="./manifest.json">  
+    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/citadel.png" />
+    <link rel="icon" type="image/png" href="citadel.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Total Battle Citadel Calculator</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+      }
+    </script>
   </body>
 </html>
