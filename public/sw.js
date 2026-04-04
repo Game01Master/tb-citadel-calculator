@@ -1,16 +1,18 @@
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open('v1').then((cache) => {
+      return cache.addAll(['./index.html']); // Minimalno keširanje
+    })
+  );
+  self.skipWaiting(); // Prisili instalaciju odmah
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(self.clients.claim()); // Odmah preuzmi kontrolu
 });
 
 self.addEventListener('fetch', (event) => {
-  // Ovaj dio govori pregledniku: "Pokušaj dohvatiti s interneta, ako ne ide, ignoriraj"
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return new Response('Offline');
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
