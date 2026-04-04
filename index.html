@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="citadel.png" />
+    <link rel="manifest" href="manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Total Battle Citadel Calculator</title>
   </head>
@@ -13,7 +13,15 @@
     
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then((registration) => {
+              console.log('ServiceWorker uspješno registriran! Scope:', registration.scope);
+            })
+            .catch((error) => {
+              console.error('Greška pri registraciji ServiceWorkera:', error);
+            });
+        });
       }
     </script>
   </body>
