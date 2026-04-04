@@ -340,7 +340,7 @@ const TROOPS_WITH_M8_RAW = [
   "Fire Phoenix I", "Manticore", "Corax II", "Royal Lion II", "Corax I",
   "Royal Lion I", "Griffin VII", "Josephine II", "Griffin VI", "Josephine I",
   "Griffin V", "Siege Ballistae VII", "Siege Ballistae VI", "Catapult V",
-  "Vulture VII", "Catapult IV", "Vulture VI", "Catapult III", "Vulture V",
+  "Vulture VII", "Catapult IV", "Vulture VI", "Catapult III", "Vulture V"
 ];
 
 const TROOPS_WITHOUT_M8_RAW = [
@@ -354,23 +354,23 @@ const TROOPS_WITHOUT_M8_RAW = [
 
 const WALL_KILLER_NAMES_RAW = [
   "Ariel", "Josephine II", "Josephine I", "Siege Ballistae VII",
-  "Siege Ballistae VI", "Catapult V", "Catapult IV", "Catapult III",
+  "Siege Ballistae VI", "Catapult V", "Catapult IV", "Catapult III"
 ];
 
 function toNum(v) {
-  // Accept decimals (e.g. "2708.5" or "2708,5"), optional percent sign, and whitespace
   if (v === null || v === undefined) return 0;
   const s = String(v).trim().replace(/%/g, "").replace(/\s+/g, "").replace(/,/g, ".");
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
+
 function fmtInt(n) {
   if (!Number.isFinite(n)) return "-";
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(Math.floor(n));
 }
+
 function fmtPct(n) {
   if (!Number.isFinite(n)) return "-";
-  // Show 1 decimal when needed; hide trailing .0
   const r = Math.round(n * 10) / 10;
   const s = (r % 1 === 0) ? String(Math.trunc(r)) : r.toFixed(1);
   return s;
@@ -421,9 +421,6 @@ async function copyToClipboard(text) {
   }
 }
 
-/* =========================
-   THEME SETUP (GAMING LOOK)
-========================= */
 function usePrefersDark() {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined" || !window.matchMedia) return false;
@@ -441,6 +438,7 @@ function usePrefersDark() {
       else mq.removeListener(handler);
     };
   }, []);
+
   return isDark;
 }
 
@@ -468,7 +466,6 @@ function makeTheme(isDark) {
   };
 }
 
-// 🛡️ CARD
 function Card({ title, children, theme, className }) {
   return (
     <div
@@ -495,7 +492,6 @@ function Card({ title, children, theme, className }) {
   );
 }
 
-// 🛡️ PICKER (TROOPS - POPUP CENTERED)
 function TroopPicker({ label, value, options, onChange, theme, inputStyle, locked, onLockedClick, t }) {
   const [open, setOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
@@ -536,6 +532,7 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle, locke
           ) : (
              <div style={{width: 36, height: 36, borderRadius: 6, background: "rgba(255,255,255,0.05)", border: "1px dashed #444"}}></div>
           )}
+          
           <span style={{ color: value ? theme.text : theme.subtext, fontWeight: 700, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "'Inter', sans-serif" }}>
             {display}
           </span>
@@ -543,7 +540,6 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle, locke
         <span style={{ color: theme.accent, fontSize: 14 }}>▼</span>
       </button>
       
-      {/* MODE = TROOP (Centrirano vertikalno, poravnato horizontalno) */}
       <Modal open={open} title={`${t('select_troop')}`} onClose={() => setOpen(false)} theme={theme} mode="troop" anchorRect={anchorRect}>
         <div style={{ display: "grid", gap: 6 }}>
           {options.map((opt) => {
@@ -578,7 +574,6 @@ function TroopPicker({ label, value, options, onChange, theme, inputStyle, locke
   );
 }
 
-// 🛡️ OPTION PICKER (SETUP - DROPDOWN STYLE)
 function OptionPicker({ label, value, options, onChange, theme, inputStyle, t }) {
   const [open, setOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
@@ -610,10 +605,10 @@ function OptionPicker({ label, value, options, onChange, theme, inputStyle, t })
         <span style={{ color: selected ? theme.text : theme.subtext, fontWeight: 800, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {display}
         </span>
+  
         <span style={{ color: theme.accent, fontSize: 14 }}>▼</span>
       </button>
 
-      {/* MODE = DROPDOWN (Ispod gumba) */}
       <Modal open={open} title={label} onClose={() => setOpen(false)} theme={theme} mode="dropdown" anchorRect={anchorRect}>
         <div style={{ display: "grid", gap: 6 }}>
           {options.map((opt) => {
@@ -641,7 +636,6 @@ function OptionPicker({ label, value, options, onChange, theme, inputStyle, t })
   );
 }
 
-// 🛡️ LANGUAGE PICKER (NOVA KOMPONENTA)
 function LanguagePicker({ label, value, options, onChange, theme, inputStyle }) {
   const [open, setOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
@@ -673,6 +667,7 @@ function LanguagePicker({ label, value, options, onChange, theme, inputStyle }) 
         <span style={{ color: theme.text, fontWeight: 800, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {display}
         </span>
+      
         <span style={{ color: theme.accent, fontSize: 14 }}>▼</span>
       </button>
 
@@ -712,10 +707,9 @@ function Row({ label, value, theme, accent }) {
   );
 }
 
-// 🛡️ MODAL - UNIVERZALNI (3 NAČINA RADA)
 function Modal({ open, title, onClose, children, theme, mode, anchorRect }) {
   if (!open) return null;
-  
+
   let popoverStyle = {};
 
   if (mode === "dropdown" && anchorRect) {
@@ -766,7 +760,8 @@ function Modal({ open, title, onClose, children, theme, mode, anchorRect }) {
 export default function App() {
   const isDark = usePrefersDark();
   const theme = useMemo(() => makeTheme(isDark), [isDark]);
-  const [lang, setLang] = useState("en"); // State za jezik
+
+  const [lang, setLang] = useState("en");
 
   const t = (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS["en"][key] || key;
 
@@ -793,13 +788,16 @@ export default function App() {
 
   const troopByName = useMemo(() => new Map(troops.map((t) => [t.name, t])), [troops]);
   const additionalBonus = TB.additionalBonusNormal ?? {};
+
   const phoenixExtra = TB.phoenixExtra ?? {};
   const firstStrikerAllowed = TB.firstStrikerAllowed ?? {};
 
   const [citadelLevel, setCitadelLevel] = useState(citadelKeys[0] ?? "25");
+
   const [mode, setMode] = useState(MODE_WITHOUT);
   const [strikerTroops, setStrikerTroops] = useState(() => Array(9).fill(""));
   const [strikerBonusPct, setStrikerBonusPct] = useState(() => Array(9).fill(""));
+
   const [firstHealthBonusPct, setFirstHealthBonusPct] = useState("");
   const [warningMsg, setWarningMsg] = useState("");
   const [orderWarningMsg, setOrderWarningMsg] = useState(false);
@@ -811,13 +809,16 @@ export default function App() {
   const getBonusGroup = (troopName) => {
     if (!troopName) return null;
     const n = normName(troopName);
+
     if (n === "jago") return "ROYAL_LION";
     if (n === "warregal" || n === "warregel") return "GRIFFIN";
     if (n.startsWith("corax")) return "CORAX";
+
     if (n.startsWith("fire phoenix")) return "PHOENIX";
     if (n.startsWith("vulture")) return "VULTURE";
     if (n.startsWith("royal lion")) return "ROYAL_LION";
     if (n.startsWith("griffin")) return "GRIFFIN";
+
     if (n.startsWith("punisher") || n.startsWith("heavy halberdier") || n.startsWith("spearmen")) return "PHH_SPEAR";
     if (n.startsWith("duelist") || n.startsWith("heavy knight") || n.startsWith("swordsmen")) return "DUEL_HK_SW";
     return null;
@@ -826,6 +827,7 @@ export default function App() {
   const getBaseStrength = (troopName) => {
     if (!troopName) return 0;
     const exact = canon.get(normName(troopName)) || troopName;
+
     const t = troopByName.get(exact);
     const v = t?.baseStrength ?? t?.base_strength ?? t?.strength ?? t?.base ?? 0;
     return Number(v) || 0;
@@ -834,6 +836,7 @@ export default function App() {
   const getBaseHealth = (troopName) => {
     if (!troopName) return 0;
     const exact = canon.get(normName(troopName)) || troopName;
+
     const t = troopByName.get(exact);
     const v = t?.baseHealth ?? t?.base_health ?? t?.health ?? t?.hp ?? 0;
     return Number(v) || 0;
@@ -842,7 +845,9 @@ export default function App() {
   const isFirstStrikerTroop = (troopName) => {
     if (!troopName) return false;
     const exact = canon.get(normName(troopName)) || troopName;
+
     const list = mode === MODE_WITH ? (firstStrikerAllowed.WITH || []) : (firstStrikerAllowed.WITHOUT || []);
+
     for (const n of list) {
       const nn = canon.get(normName(n)) || n;
       if (nn === exact) return true;
@@ -856,6 +861,7 @@ export default function App() {
   const [copyNotice, setCopyNotice] = useState("");
 
   const cit = TB.citadels?.[citadelLevel];
+
   const targets = useMemo(() => {
     if (!cit) return null;
     return mode === MODE_WITH ? cit.m8m9Targets : cit.normalTargets;
@@ -935,14 +941,17 @@ export default function App() {
   const normalize = (current) => {
     const next = [...current];
     const secFallback = secondAllowed[0] ?? "";
+
     next[1] = secondAllowed.includes(next[1]) ? next[1] : secFallback;
     if (next[0] && !firstAllowed.map(normName).includes(normName(next[0]))) next[0] = "";
+
     for (let i = 2; i < 9; i++) {
       if (next[i] && !nonWallPool.map(normName).includes(normName(next[i]))) next[i] = "";
     }
     const seen = new Set();
     for (let i = 0; i < 9; i++) {
-      const v = next[i]; if (!v) continue; const k = normName(v);
+      const v = next[i];
+      if (!v) continue; const k = normName(v);
       if (seen.has(k)) next[i] = ""; else seen.add(k);
     }
     const wallSet = new Set(wallKillerPool.map(normName));
@@ -975,30 +984,26 @@ export default function App() {
     setResultsOpen(false);
   }, [mode, citadelLevel, poolAll.join("|"), wallKillerPool.join("|"), firstAllowed.join("|")]);
 
-  // --- LOGIKA ZA FILTRIRANJE TRUPA PO POZICIJAMA ---
   const optionsForIdx = (idx) => {
     const taken = new Set(strikerTroops.filter((_, i) => i !== idx).filter(Boolean).map(normName));
+
     let pool;
     if (idx === 0) pool = firstAllowed;
     else if (idx === 1) pool = secondAllowed;
     else pool = nonWallPool;
-    const filtered = pool.filter((n) => !taken.has(normName(n)));
     
+    const filtered = pool.filter((n) => !taken.has(normName(n)));
     let result = filtered;
 
-    // 1. ZABRANA: Epic Monster Hunter ne smije biti 1., 2. ili 3. napadač (indeksi 0, 1, 2)
-    // Može se birati tek od Cleanup 1 (indeks 3) nadalje
     if (idx <= 2) {
        result = result.filter(n => normName(n) !== normName("Epic Monster Hunter"));
     }
 
-    // 2. ZABRANA: U "With M8" modu određene jedinice ne smiju biti 3. napadač (indeks 2)
-if (mode === MODE_WITH && idx === 2) {
-  const excluded = ["Manticore", "Fire Phoenix I", "Fire Phoenix II", "Wyvern"];
-  result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
-}
+    if (mode === MODE_WITH && idx === 2) {
+      const excluded = ["Manticore", "Fire Phoenix I", "Fire Phoenix II", "Wyvern"];
+      result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
+    }
 
-    // 3. ZABRANA: U "Without M8" modu, određene pješačke jedinice ne smiju biti 3. napadač
     if (mode === MODE_WITHOUT && idx === 2) {
         const excluded = ["Punisher I", "Heavy Halberdier VII", "Heavy Halberdier VI", "Duelist I", "Heavy Knight VII", "Heavy Knight VI", "Spearmen V", "Swordsmen V", "Wyvern"];
         result = result.filter(n => !excluded.some(e => normName(e) === normName(n)));
@@ -1010,6 +1015,7 @@ if (mode === MODE_WITH && idx === 2) {
 
   const setTroopAt = (idx, name) => {
     setStrikerTroops((prev) => normalize(prev.map((v, i) => (i === idx ? name : v))));
+
     const g = getBonusGroup(name);
     if (g) {
       setStrikerBonusPct((prev) => {
@@ -1027,9 +1033,12 @@ if (mode === MODE_WITH && idx === 2) {
   const handleTroopChange = (idx, picked) => {
     if (idx >= 2) {
       const first = strikerTroops[0];
+
       if (first && picked && isFirstStrikerTroop(picked)) {
-        const firstS = getBaseStrength(first); const firstH = getBaseHealth(first);
+        const firstS = getBaseStrength(first);
+        const firstH = getBaseHealth(first);
         const pickedS = getBaseStrength(picked); const pickedH = getBaseHealth(picked);
+
         if (pickedS > firstS || pickedH > firstH) {
           const strikerLabels = TRANSLATIONS[lang]?.strikers || TRANSLATIONS['en'].strikers;
           const label = strikerLabels[idx];
@@ -1049,6 +1058,7 @@ if (mode === MODE_WITH && idx === 2) {
   const setBonusAt = (idx, v) => {
     const raw = v;
     const troopName = strikerTroops[idx];
+
     const g = getBonusGroup(troopName);
     if (g) {
       setGroupBonusPct((prev) => ({ ...prev, [g]: raw }));
@@ -1102,7 +1112,6 @@ if (mode === MODE_WITH && idx === 2) {
   const perStriker = useMemo(() => {
     if (!cit || !targets || targets.length !== 9) return [];
     
-    // Get localized labels
     const labels = TRANSLATIONS[lang]?.strikers || TRANSLATIONS['en'].strikers;
 
     return STRIKER_LABELS.map((_, idx) => {
@@ -1111,30 +1120,32 @@ if (mode === MODE_WITH && idx === 2) {
       const troop = troopByName.get(troopName);
       let effBonus = toNum(strikerBonusPct[idx]);
       if (troopName && additionalBonus[troopName] !== undefined) effBonus += toNum(additionalBonus[troopName]);
+    
       if (troopName && mode === MODE_WITH && idx === 1 && phoenixExtra[troopName] !== undefined) effBonus += toNum(phoenixExtra[troopName]);
       const baseStrength = troop ? toNum(troop.strength) : 0;
       const dmgPerTroop = baseStrength * (1 + effBonus / 100);
       const targetHP = toNum(targets[idx]);
       let required = dmgPerTroop > 0 ? Math.floor(targetHP / dmgPerTroop) : 0;
       
-      // LOGIKA ZA SMANJENJE EPIC MONSTER HUNTERA (Samo ako je cleanup > 2)
-      // I ako je odabran (što je moguće samo na pozicijama 3+)
       if (idx > 2 && normName(troopName) === normName("Epic Monster Hunter")) {
          required = Math.max(0, required - 5);
       }
 
       if (idx === 0 && dmgPerTroop > 0) required += firstDeaths + 10;
+
       return { idx, label, troopName, effBonus, requiredTroops: required };
     });
   }, [cit, targets, strikerTroops, strikerBonusPct, troopByName, additionalBonus, phoenixExtra, mode, firstDeaths, lang]);
 
   const showResults = () => {
     const counts = new Map();
+
     const add = (name, n) => {
       if (!name || !Number.isFinite(n)) return;
       const k = normName(name);
       counts.set(k, (counts.get(k) || 0) + Math.floor(n));
     };
+
     if (wallKillerTroop && wallKiller?.requiredTroops) {
       add(wallKillerTroop, wallKiller.requiredTroops);
     }
@@ -1144,6 +1155,7 @@ if (mode === MODE_WITH && idx === 2) {
       }
     }
     const ordered = [];
+
     for (const name of RESULT_ORDER) {
       const k = normName(name);
       if (counts.has(k)) {
@@ -1155,10 +1167,10 @@ if (mode === MODE_WITH && idx === 2) {
       citadelLabel: `Elven ${citadelLevel}`,
       troops: ordered,
     });
+
     setResultsOpen(true);
   };
 
-  // --- ENTER KEY HANDLER ---
   const handleEnter = (e, nextId) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -1166,7 +1178,7 @@ if (mode === MODE_WITH && idx === 2) {
       if (nextElement) {
         nextElement.focus();
         if (nextElement.tagName === "INPUT") {
-          nextElement.select(); // Oznacava tekst za lakse prepisivanje
+          nextElement.select();
         }
       }
     }
@@ -1241,7 +1253,6 @@ if (mode === MODE_WITH && idx === 2) {
 
         input:focus, select:focus, button:focus { outline: none !important; border-color: rgba(197,160,89,0.85) !important; box-shadow: 0 0 0 2px rgba(197,160,89,0.35), 0 0 22px rgba(197,160,89,0.12) !important; }
 
-        /* FOOTER STYLE - SA PADDING FIXOM */
         .app-footer { text-align: center; padding: 4px; font-size: 14px; color: ${theme.subtext}; opacity: 0.9; }
         @media (min-width: 1100px) { .app-footer { padding-bottom: 18px; } }
 
@@ -1249,34 +1260,28 @@ if (mode === MODE_WITH && idx === 2) {
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: ${theme.accent}; border-radius: 3px; }
       
-/* ===== Background (imported assets) ===== */
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-}
+        html, body { margin: 0; padding: 0; background: #000; }
 
-.app-root {
-  min-height: 100vh;
-  background-image: url(${bgMobile}); /* mobile / portrait */
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
+        .app-root {
+          min-height: 100vh;
+          background-image: url(${bgMobile}); 
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
 
-@media (min-width: 900px) {
-  .app-root {
-    background-image: url(${bgDesktop}); /* desktop / landscape */
-    background-size: contain;
-    background-position: top center;
-  }
-}
-`}</style>
+        @media (min-width: 900px) {
+          .app-root {
+            background-image: url(${bgDesktop});
+            background-size: contain;
+            background-position: top center;
+          }
+        }
+      `}</style>
 
       <div className="app-container">
         
-        {/* HEADER WRAPPER - BEZ SCALINGA */}
         <div className="header-wrapper">
           <div style={{ textAlign: "center", marginBottom: 30 }}>
             <div style={{ 
@@ -1287,26 +1292,22 @@ html, body {
               filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
             }}>
               Citadel Calculator
-            </div>
+             </div>
             <div style={{
               marginTop: 6, fontSize: 12, fontWeight: 800, letterSpacing: 3,
               textTransform: "uppercase", color: theme.accent, opacity: 1, textShadow: "0 2px 10px rgba(0,0,0,0.8)", fontFamily: "'Inter', sans-serif",
             }}>
               by GM
-            </div>
+             </div>
           </div>
         </div>
 
-        {/* CONTENT WRAPPER ZA FADE IN */}
         <div className="content-wrapper">
-          {/* --- MAIN GRID LAYOUT START --- */}
           <div className="main-layout-grid">
             
-            {/* LEFT SIDEBAR (Setup Only) - STICKY NA DESKTOPU */}
             <div className="layout-sidebar">
               <Card title={t('setup')} theme={theme}>
                 
-                {/* JEZIČNI PAD (DROPDOWN) */}
                 <div style={{ marginBottom: 16 }}>
                   <LanguagePicker 
                     label={t('language')}
@@ -1351,22 +1352,21 @@ html, body {
                       border: `1px solid ${theme.danger}`, background: "rgba(255, 77, 77, 0.15)",
                       color: "#ff6b6b", fontWeight: 700, fontSize: 14, cursor: "pointer", marginTop: 8,
                     }}
-                  >
+                    >
                     {t('reset_btn')}
                   </button>
                 </div>
               </Card>
 
-              {/* DESKTOP CALCULATE BUTTON - POPRAVLJEN SHADOW */}
               <button 
                 id="btn-calculate-desktop"
                 className="desktop-calc-btn" 
                 onClick={showResults} 
                 style={{
-                  width: "100%", padding: "20px", borderRadius: 12, border: "none",
+                  width: "100%", padding: "20px", 
+                  borderRadius: 12, border: "none",
                   background: theme.btnBg, color: theme.btnText,
                   fontWeight: 900, letterSpacing: 1, fontSize: 20, fontFamily: "'Cinzel', serif",
-                  // Smanjen shadow (bio je 25px, sad je 15px i ima mali offset) da ne izgleda kao blok
                   boxShadow: `0 4px 15px rgba(197, 160, 89, 0.4)`, 
                   cursor: "pointer",
                   transition: "transform 0.2s, box-shadow 0.2s",
@@ -1377,10 +1377,8 @@ html, body {
               </button>
             </div>
 
-            {/* RIGHT CONTENT (Wall Killer + Striker Grid) */}
             <div className="striker-grid">
               
-              {/* WALL KILLER */}
               <Card title={t('wall_killer')} theme={theme}>
                 <div style={{ display: "grid", gap: 16 }}>
                   <TroopPicker
@@ -1398,6 +1396,7 @@ html, body {
                       style={inputStyle} onFocus={(e) => e.target.select()}
                     />
                   </label>
+          
                   <div style={{ background: "rgba(0,0,0,0.42)", padding: "12px 16px", borderRadius: 10, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
                       <Row label={t('eff_bonus')} value={`${fmtPct(wallKiller.effBonus)}%`} theme={theme} accent />
                       <Row label={t('req_troops')} value={fmtInt(wallKiller.requiredTroops)} theme={theme} accent />
@@ -1405,14 +1404,11 @@ html, body {
                 </div>
               </Card>
 
-              {/* STRIKERS LOOP */}
               {perStriker.map((s) => {
                 const idx = s.idx;
                 const isFirst = idx === 0;
                 const opts = optionsForIdx(idx);
                 const nextInputId = idx < 8 ? `bonus-str-${idx + 1}` : "btn-calculate-desktop";
-
-                // 🛡️ LOGIKA ZA LOCKED: Ako nije First Striker, a First Striker je prazan -> LOCKED
                 const isFirstStrikerSelected = !!strikerTroops[0];
                 const isLocked = !isFirst && !isFirstStrikerSelected;
 
@@ -1422,8 +1418,8 @@ html, body {
                       <TroopPicker
                         label={t('select_troop')} value={strikerTroops[idx]} options={opts}
                         onChange={(v) => handleTroopChange(idx, v)} theme={theme} inputStyle={inputStyle}
-                        locked={isLocked} // <--- LOCKED UMJESTO DISABLED
-                        onLockedClick={() => setOrderWarningMsg(true)} // <--- OTVORI POPUP
+                        locked={isLocked} 
+                        onLockedClick={() => setOrderWarningMsg(true)} 
                         t={t}
                       />
 
@@ -1447,8 +1443,8 @@ html, body {
                           type="number" step="any" inputMode="decimal" placeholder="0" value={strikerBonusPct[idx]}
                           onChange={(e) => setBonusAt(idx, e.target.value)}
                           onKeyDown={(e) => handleEnter(e, nextInputId)}
-                          readOnly={isLocked} // <--- READONLY UMJESTO DISABLED
-                          onClick={() => isLocked && setOrderWarningMsg(true)} // <--- KLIK OTVARA POPUP
+                          readOnly={isLocked} 
+                          onClick={() => isLocked && setOrderWarningMsg(true)} 
                           style={{...inputStyle, borderColor: "rgba(128, 216, 255, 0.4)"}} onFocus={(e) => e.target.select()}
                         />
                       </label>
@@ -1456,26 +1452,17 @@ html, body {
                       <div style={{ background: "rgba(0,0,0,0.42)", padding: "12px 16px", borderRadius: 10, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
                           <Row label={t('eff_bonus')} value={`${fmtPct(s.effBonus)}%`} theme={theme} accent />
                           <Row label={t('req_troops')} value={fmtInt(s.requiredTroops)} theme={theme} accent />
-                          {isFirst && (
-                          <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${theme.borderSoft}` }}>
-                              <Row label={t('citadel_losses')} value={fmtInt(firstDeaths)} theme={theme} />
-                          </div>
-                          )}
                       </div>
                     </div>
                   </Card>
                 );
               })}
             </div>
-            {/* END RIGHT CONTENT */}
           </div>
-          {/* --- MAIN GRID LAYOUT END --- */}
         </div>
-        {/* END CONTENT WRAPPER */}
 
-        {/* MOBILE BOTTOM BAR (Visible only on Mobile) - IZVUČEN IZVAN CONTENT WRAPPERA ZA FIX POZICIJU */}
         <div className={`mobile-bottom-bar ${introFinished ? "visible" : "hidden"}`} style={{
-            position: "fixed", left: 0, width: "100%", bottom: 9, padding: 16, // FIX: width 100% instead of right:0
+            position: "fixed", left: 0, width: "100%", bottom: 9, padding: 16,
             background: "transparent", borderTop: "none", backdropFilter: "none", zIndex: 99
           }}>
           <div style={{ width: "100%", maxWidth: 600, margin: "0 auto" }}>
@@ -1494,13 +1481,11 @@ html, body {
           </div>
         </div>
 
-        {/* MODALS */}
         <Modal open={!!warningMsg} title={t('invalid_order')} onClose={() => setWarningMsg("")} theme={theme}>
           <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, color: theme.text, fontSize: 16 }}>{warningMsg}</div>
           <button onClick={() => setWarningMsg("")} style={{ width: "100%", marginTop: 24, padding: "14px", borderRadius: 10, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 16, cursor: "pointer" }}>OK</button>
         </Modal>
 
-        {/* --- NOVI POPUP ZA REDOSLIJED --- */}
         <Modal open={orderWarningMsg} title={t('action_required')} onClose={() => setOrderWarningMsg(false)} theme={theme}>
           <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, color: theme.text, fontSize: 16 }}>
             {t('select_first_striker_msg')}
@@ -1508,7 +1493,6 @@ html, body {
           <button onClick={() => setOrderWarningMsg(false)} style={{ width: "100%", marginTop: 24, padding: "14px", borderRadius: 10, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 16, cursor: "pointer" }}>OK</button>
         </Modal>
 
-        {/* --- INSTRUCTIONS MODAL (VRAĆEN NA STANDARD) --- */}
         <Modal open={helpOpen} title={t('instructions_btn')} onClose={() => setHelpOpen(false)} theme={theme}>
           <div style={{ color: theme.text, lineHeight: 1.6, fontSize: 15, display: "grid", gap: 20 }}>
             <div><div style={{ fontWeight: 800, marginBottom: 8, fontSize: 18, color: theme.accent }}>{t('help_goal_title')}</div><div style={{ color: theme.subtext }}>{t('help_goal_text')}</div></div>
@@ -1522,7 +1506,8 @@ html, body {
         </Modal>
 
         <Modal open={resultsOpen} title={t('results_title')} onClose={() => setResultsOpen(false)} theme={theme}>
-          {calcOutput ? (
+          {calcOutput ?
+          (
             <>
               <div style={{ background: "rgba(0,0,0,0.32)", padding: 16, borderRadius: 12, marginBottom: 20, border: `1px solid ${theme.border}`, boxShadow: theme.goldGlow }}>
                   <Row label="Mode" value={calcOutput.modeLabel} theme={theme} accent />
@@ -1538,7 +1523,8 @@ html, body {
               >
                 <span></span> {t('copy_btn')}
               </button>
-              {copyNotice ? <div style={{ textAlign: "center", marginBottom: 16, color: theme.accent, fontWeight: 700 }}>{copyNotice}</div> : null}
+              {copyNotice ?
+              <div style={{ textAlign: "center", marginBottom: 16, color: theme.accent, fontWeight: 700 }}>{copyNotice}</div> : null}
               <div style={{ display: "grid", gap: 8 }}>
               {calcOutput.troops.map((l, i) => (
                 <div key={i} style={{ padding: "12px 16px", background: theme.cardBg, borderRadius: 12, border: `1px solid ${theme.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: `${theme.shadow}, ${theme.goldGlow}` }}>
