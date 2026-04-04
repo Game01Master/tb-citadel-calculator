@@ -1,5 +1,5 @@
-
 {
+  "id": "/tb-citadel-calculator/index.html",
   "name": "TB Citadel Calculator",
   "short_name": "Citadel Calc",
   "start_url": "./index.html",
@@ -9,8 +9,21 @@
   "icons": [
     {
       "src": "citadel1.png",
-      "sizes": "512x512",
+      "sizes": "1024x1024",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }
