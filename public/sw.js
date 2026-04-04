@@ -1,6 +1,16 @@
-self.addEventListener('install', (e) => {
-  console.log('Service Worker: Instaliran');
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
 });
-self.addEventListener('fetch', (e) => {
-  // Prazno
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+  // Ovaj dio govori pregledniku: "Pokušaj dohvatiti s interneta, ako ne ide, ignoriraj"
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return new Response('Offline');
+    })
+  );
 });
