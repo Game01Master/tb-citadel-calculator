@@ -763,6 +763,28 @@ export default function App() {
 
   const [lang, setLang] = useState("en");
 
+  // --- PWA INSTALLATION LOGIC ---
+  const [installPrompt, setInstallPrompt] = useState(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setInstallPrompt(null);
+    }
+  };
+  // ------------------------------
+
   const t = (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS["en"][key] || key;
 
   const [introFinished, setIntroFinished] = useState(false);
@@ -1355,6 +1377,20 @@ export default function App() {
                     >
                     {t('reset_btn')}
                   </button>
+
+                  {installPrompt && (
+                    <button 
+                      onClick={handleInstallClick}
+                      style={{
+                        width: "100%", padding: "12px 16px", borderRadius: 10,
+                        border: "none", background: theme.accent,
+                        color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer", marginTop: 8,
+                        display: "flex", alignItems: "center", justifyContent: "center"
+                      }}
+                    >
+                      📲 Install app
+                    </button>
+                  )}
                 </div>
               </Card>
 
