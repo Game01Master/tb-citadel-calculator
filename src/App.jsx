@@ -15,6 +15,7 @@ document.head.appendChild(fontLink);
 
 const MODE_WITHOUT = "WITHOUT";
 const MODE_WITH = "WITH";
+const PRESETS_STORAGE_KEY = "citadel_calc_presets"; // Ključ za lokalnu memoriju
 
 // Konstanta za petlju
 const STRIKER_LABELS = [
@@ -32,6 +33,7 @@ const STRIKER_LABELS = [
 // --- LANGUAGES CONFIG ---
 const LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'hr', label: 'Hrvatski', flag: '🇭🇷' },
   { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
   { code: 'es', label: 'Español', flag: '🇪🇸' },
@@ -86,7 +88,68 @@ const TRANSLATIONS = {
     help_recalc_text: "After ANY strength bonus change, enter new bonuses and press Calculate again. Small changes matter!",
     help_bonus_title: "❓ How to find bonuses?",
     help_bonus_text1: "Attack a level 10 Citadel with 10 of each selected troop type. Copy the bonuses from the attack report into the calculator.",
-    help_bonus_text2: "Or select the captains, equipment, and artifacts. Send the hero and dragon to the fort and copy the bonuses from the barracks."
+    help_bonus_text2: "Or select the captains, equipment, and artifacts. Send the hero and dragon to the fort and copy the bonuses from the barracks.",
+    presets_btn: "💾 Presets",
+    presets_modal_title: "Presets Manager",
+    save_setup: "Save Current Setup",
+    preset_name: "Preset Name",
+    save_btn: "SAVE",
+    load_btn: "LOAD",
+    no_presets: "No saved presets."
+  },
+  hr: {
+    language: "Jezik",
+    setup: "⚙️ Postavke",
+    instructions_btn: "ℹ️ Upute",
+    m8_question: "Imaš li M8/M9 trupe?",
+    yes: "Da",
+    no: "Ne",
+    citadel_level: "Razina Citadele",
+    reset_btn: "Poništi Odabir",
+    calculate_btn: "IZRAČUNAJ",
+    wall_killer: "🛡️ Razbijač Zida",
+    select_troop: "Odaberi Trupu",
+    select_placeholder: "— Odaberi —",
+    none: "— Ništa —",
+    strength_bonus: "Bonus Snage (%)",
+    health_bonus: "Bonus Zdravlja (%)",
+    eff_bonus: "Efektivni Bonus",
+    req_troops: "Potrebne Trupe",
+    citadel_losses: "Gubitci Prvog Udara",
+    action_required: "⛔ Potrebna Akcija",
+    select_first_striker_msg: "Moraš odabrati Prvog Napadača prije odabira ostalih trupa.",
+    invalid_order: "⚠️ Neispravan Redoslijed",
+    base_stats_warning: (name1, str1, hp1, name2, str2, hp2) => `${name1} ima veće OSNOVNE statistike (Snaga: ${str1}, Zdr: ${hp1}) od Prvog Napadača (${name2} - Snaga: ${str2}, Zdr: ${hp2}).\n\nOdaberi jačeg Prvog napadača!`,
+    results_title: "📋 Rezultati Izračuna",
+    mode_label: "Način",
+    citadel_label: "Citadela",
+    copy_btn: "📄 Kopiraj Listu",
+    copy_success: "✅ Kopirano!",
+    copy_fail: "❌ Greška pri kopiranju",
+    no_results: "Nema rezultata za prikaz.",
+    strikers: ["Prvi Napadač", "Drugi Napadač", "Treći Napadač", "Čišćenje 1", "Čišćenje 2", "Čišćenje 3", "Čišćenje 4", "Čišćenje 5", "Čišćenje 6"],
+    help_goal_title: "🎯 Cilj",
+    help_goal_text: "Koristi ispravne trupe i bonuse kako bi smanjio gubitke pri napadu na Citadelu. Ja sam se pobrinuo za pravilan odabir trupa.",
+    help_rule_title: "❗ Najvažnije Pravilo",
+    help_rule_text: "Maksimiziraj Zdravlje Prvog Napadača. U pravilnom napadu, samo bi trupe Prvog Napadača trebale imati gubitke. Broj trupa PRVOG NAPADAČA MOŽE biti veći od izračunatog. Sve ostale trupe MORAJU se koristiti u točnom broju kako je izračunato.",
+    help_first_title: "🦅 Prvi Napadač",
+    help_first_text: "Mora biti najjača leteća garda (Guardsmen): Corax ili Griffin.",
+    help_captains_title: "⚔️ Kapetani",
+    help_captains_text: "Preporučeni: Wu Zetian, Brunhild, Skadi, Beowulf, Aydae, Ramses, Sofia.",
+    help_arti_title: "✨ Artefakti",
+    help_arti_text: "Koristi artefakte koji povećavaju Zdravlje (Health) za Leteće trupe, Gardu ili Vojsku (Army).",
+    help_recalc_title: "🔄 Ponovni izračun",
+    help_recalc_text: "Nakon BILO KOJE promjene bonusa snage, unesi nove bonuse i ponovno klikni Izračunaj. Male promjene čine razliku!",
+    help_bonus_title: "❓ Kako pronaći bonuse?",
+    help_bonus_text1: "Napadni Citadelu razine 10 s po 10 trupa od svakog odabranog tipa. Kopiraj bonuse iz izvješća o napadu u kalkulator.",
+    help_bonus_text2: "Ili odaberi kapetane, opremu i artefakte, pošalji heroja i zmaja u utvrdu i prepiši bonuse iz vojarne (barracks).",
+    presets_btn: "💾 Spremi postavke",
+    presets_modal_title: "Spremljene postavke",
+    save_setup: "Spremi Trenutne postavke",
+    preset_name: "Ime Postavke",
+    save_btn: "SPREMI",
+    load_btn: "UČITAJ",
+    no_presets: "Nema spremljenih postavki."
   },
   de: {
     language: "Sprache",
@@ -133,7 +196,14 @@ const TRANSLATIONS = {
     help_recalc_text: "Nach JEDER Änderung des Stärkebonus neu berechnen. Kleine Änderungen sind wichtig!",
     help_bonus_title: "❓ Wie finde ich Boni?",
     help_bonus_text1: "Greife eine Zitadelle Level 10 mit je 10 Einheiten der gewählten Truppen an. Kopiere die Boni aus dem Bericht.",
-    help_bonus_text2: "Oder wähle Hauptmänner, Ausrüstung und Artefakte. Sende Held und Drache zur Festung und kopiere die Boni aus der Kaserne."
+    help_bonus_text2: "Oder wähle Hauptmänner, Ausrüstung und Artefakte. Sende Held und Drache zur Festung und kopiere die Boni aus der Kaserne.",
+    presets_btn: "💾 Presets",
+    presets_modal_title: "Preset-Manager",
+    save_setup: "Setup speichern",
+    preset_name: "Preset-Name",
+    save_btn: "SPEICHERN",
+    load_btn: "LADEN",
+    no_presets: "Keine Presets."
   },
   fr: {
     language: "Langue",
@@ -180,7 +250,14 @@ const TRANSLATIONS = {
     help_recalc_text: "Après CHAQUE changement de bonus, recalculez.",
     help_bonus_title: "❓ Trouver les bonus ?",
     help_bonus_text1: "Attaquez une Citadelle niv. 10 avec 10 unités de chaque type. Copiez les bonus du rapport.",
-    help_bonus_text2: "Ou sélectionnez capitaines et artefacts, envoyez le héros au fort et copiez les bonus de la caserne."
+    help_bonus_text2: "Ou sélectionnez capitaines et artefacts, envoyez le héros au fort et copiez les bonus de la caserne.",
+    presets_btn: "💾 Préréglages",
+    presets_modal_title: "Gestionnaire",
+    save_setup: "Sauvegarder Config",
+    preset_name: "Nom",
+    save_btn: "SAUVER",
+    load_btn: "CHARGER",
+    no_presets: "Aucun préréglage."
   },
   es: {
     language: "Idioma",
@@ -227,7 +304,14 @@ const TRANSLATIONS = {
     help_recalc_text: "Tras CUALQUIER cambio en bonos, calcula de nuevo.",
     help_bonus_title: "❓ ¿Cómo ver los bonos?",
     help_bonus_text1: "Ataca una Ciudadela nv. 10 con 10 unidades de cada tipo. Copia los bonos del informe.",
-    help_bonus_text2: "O selecciona capitanes y artefactos, envía al héroe al fuerte y copia los bonos del cuartel."
+    help_bonus_text2: "O selecciona capitanes y artefactos, envía al héroe al fuerte y copia los bonos del cuartel.",
+    presets_btn: "💾 Preajustes",
+    presets_modal_title: "Gestor",
+    save_setup: "Guardar Config",
+    preset_name: "Nombre",
+    save_btn: "GUARDAR",
+    load_btn: "CARGAR",
+    no_presets: "Sin preajustes."
   },
   it: {
     language: "Lingua",
@@ -269,12 +353,19 @@ const TRANSLATIONS = {
     help_captains_title: "⚔️ Capitani",
     help_captains_text: "Consigliati: Wu Zetian, Brunhild, Skadi, Beowulf, Aydae, Ramses, Sofia.",
     help_arti_title: "✨ Artefatti",
-    help_arti_text: "Usa artefatti che aumentano la Salute (Volanti, Guardie o Esercito).",
+    help_arti_text: "Usa artefatti che aumenten la Salute (Volanti, Guardie o Esercito).",
     help_recalc_title: "🔄 Ricalcola",
     help_recalc_text: "Dopo QUALSIASI cambio di bonus, ricalcola.",
     help_bonus_title: "❓ Come trovare i bonus?",
     help_bonus_text1: "Attacca una Cittadella liv. 10 con 10 unità per tipo. Copia i bonus dal report.",
-    help_bonus_text2: "Oppure seleziona capitani e artefatti, invia l'eroe al forte e copia i bonus dalla caserma."
+    help_bonus_text2: "Oppure seleziona capitani e artefatti, invia l'eroe al forte e copia i bonus dalla caserma.",
+    presets_btn: "💾 Preimpostazioni",
+    presets_modal_title: "Gestione",
+    save_setup: "Salva Setup",
+    preset_name: "Nome",
+    save_btn: "SALVA",
+    load_btn: "CARICA",
+    no_presets: "Nessuna preimpostazione."
   },
   pl: {
     language: "Język",
@@ -321,7 +412,14 @@ const TRANSLATIONS = {
     help_recalc_text: "Po KAŻDEJ zmianie bonusu siły, oblicz ponownie.",
     help_bonus_title: "❓ Jak znaleźć bonusy?",
     help_bonus_text1: "Zaatakuj Cytadelę poz. 10 używając po 10 jednostek każdego typu. Skopiuj bonusy z raportu.",
-    help_bonus_text2: "Lub wybierz kapitanów i artefakty, wyślij bohatera do fortu i skopiuj bonusy z koszar."
+    help_bonus_text2: "Lub wybierz kapitanów i artefakty, wyślij bohatera do fortu i skopiuj bonusy z koszar.",
+    presets_btn: "💾 Zapisane Ustawienia",
+    presets_modal_title: "Zarządzaj Ustawieniami",
+    save_setup: "Zapisz Ustawienia",
+    preset_name: "Nazwa Ustawienia",
+    save_btn: "ZAPISZ",
+    load_btn: "WCZYTAJ",
+    no_presets: "Brak zapisanych ustawień."
   }
 };
 
@@ -763,28 +861,6 @@ export default function App() {
 
   const [lang, setLang] = useState("en");
 
-  // --- PWA INSTALLATION LOGIC ---
-  const [installPrompt, setInstallPrompt] = useState(null);
-
-  useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (!installPrompt) return;
-    installPrompt.prompt();
-    const { outcome } = await installPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setInstallPrompt(null);
-    }
-  };
-  // ------------------------------
-
   const t = (key) => TRANSLATIONS[lang]?.[key] || TRANSLATIONS["en"][key] || key;
 
   const [introFinished, setIntroFinished] = useState(false);
@@ -823,6 +899,58 @@ export default function App() {
   const [firstHealthBonusPct, setFirstHealthBonusPct] = useState("");
   const [warningMsg, setWarningMsg] = useState("");
   const [orderWarningMsg, setOrderWarningMsg] = useState(false);
+
+  // --- LOGIKA ZA PRESETS (Spremanje u Local Storage) ---
+  const [presets, setPresets] = useState([]);
+  const [presetsModalOpen, setPresetsModalOpen] = useState(false);
+  const [newPresetName, setNewPresetName] = useState("");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(PRESETS_STORAGE_KEY);
+      if (saved) setPresets(JSON.parse(saved));
+    } catch (e) { console.error("Greška pri učitavanju preseta", e); }
+  }, []);
+
+  const handleSavePreset = () => {
+    if (!newPresetName.trim()) return;
+    const newPreset = {
+      id: Date.now().toString(),
+      name: newPresetName.trim(),
+      mode,
+      citadelLevel,
+      wallKillerTroop,
+      wallKillerBonusPct,
+      strikerTroops,
+      strikerBonusPct,
+      firstHealthBonusPct,
+    };
+    const updated = [...presets, newPreset];
+    setPresets(updated);
+    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updated));
+    setNewPresetName("");
+  };
+
+  const handleLoadPreset = (p) => {
+    setMode(p.mode || MODE_WITHOUT);
+    setCitadelLevel(p.citadelLevel || "25");
+    setWallKillerTroop(p.wallKillerTroop || "");
+    setWallKillerBonusPct(p.wallKillerBonusPct || "");
+    setStrikerTroops(p.strikerTroops || Array(9).fill(""));
+    setStrikerBonusPct(p.strikerBonusPct || Array(9).fill(""));
+    setFirstHealthBonusPct(p.firstHealthBonusPct || "");
+    setGroupBonusPct({ CORAX: "", PHOENIX: "", PHH_SPEAR: "", DUEL_HK_SW: "", VULTURE: "", ROYAL_LION: "", GRIFFIN: "" });
+    setCalcOutput(null);
+    setResultsOpen(false);
+    setPresetsModalOpen(false); 
+  };
+
+  const handleDeletePreset = (id) => {
+    const updated = presets.filter(p => p.id !== id);
+    setPresets(updated);
+    localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(updated));
+  };
+  // -----------------------------------------------------
 
   const [groupBonusPct, setGroupBonusPct] = useState(() => ({
     CORAX: "", PHOENIX: "", PHH_SPEAR: "", DUEL_HK_SW: "", VULTURE: "", ROYAL_LION: "", GRIFFIN: "",
@@ -1368,32 +1496,32 @@ export default function App() {
                     onChange={(v) => { setCitadelLevel(v); setCalcOutput(null); setResultsOpen(false); }}
                     theme={theme} inputStyle={inputStyle} t={t}
                   />
+                  
+                  {/* --- GUMB ZA OTVARANJE PRESET MODALA --- */}
+                  <button onClick={() => setPresetsModalOpen(true)}
+                    style={{
+                      width: "100%", padding: "12px 16px", borderRadius: 10,
+                      border: `1px solid ${theme.accent}`, background: "rgba(197, 160, 89, 0.1)",
+                      color: theme.accent, fontWeight: 700, fontSize: 14, cursor: "pointer", marginTop: 8,
+                    }}
+                  >
+                    {t('presets_btn')}
+                  </button>
+
                   <button onClick={resetSelections}
                     style={{
                       width: "100%", padding: "12px 16px", borderRadius: 10,
                       border: `1px solid ${theme.danger}`, background: "rgba(255, 77, 77, 0.15)",
-                      color: "#ff6b6b", fontWeight: 700, fontSize: 14, cursor: "pointer", marginTop: 8,
+                      color: "#ff6b6b", fontWeight: 700, fontSize: 14, cursor: "pointer"
                     }}
                     >
                     {t('reset_btn')}
                   </button>
 
-                  {installPrompt && (
-                    <button 
-                      onClick={handleInstallClick}
-                      style={{
-                        width: "100%", padding: "12px 16px", borderRadius: 10,
-                        border: "none", background: theme.accent,
-                        color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer", marginTop: 8,
-                        display: "flex", alignItems: "center", justifyContent: "center"
-                      }}
-                    >
-                      📲 Install app
-                    </button>
-                  )}
                 </div>
               </Card>
 
+              {/* DESKTOP CALCULATE BUTTON - STICKY UNUTAR SIDEBARA */}
               <button 
                 id="btn-calculate-desktop"
                 className="desktop-calc-btn" 
@@ -1407,6 +1535,9 @@ export default function App() {
                   cursor: "pointer",
                   transition: "transform 0.2s, box-shadow 0.2s",
                   marginTop: 16,
+                  position: "sticky", // LJEPLJIV NA DESKTOPU
+                  bottom: 0,          // ZALIJEPLJEN ZA DNO
+                  zIndex: 20,         // IZNAD OSTALOG SADRŽAJA
                 }}
               >
                 {t('calculate_btn')}
@@ -1516,6 +1647,51 @@ export default function App() {
             </button>
           </div>
         </div>
+
+        {/* --- MODAL ZA UNOS IMENA PRESETA --- */}
+        <Modal open={presetsModalOpen} title={t('presets_modal_title')} onClose={() => setPresetsModalOpen(false)} theme={theme}>
+          <div style={{ display: "grid", gap: 20 }}>
+            {/* Save Section */}
+            <div style={{ display: "grid", gap: 8, background: "rgba(0,0,0,0.3)", padding: 16, borderRadius: 12, border: `1px solid ${theme.borderSoft}` }}>
+              <span style={{ color: theme.subtext, fontWeight: 600, fontSize: 13, textTransform: "uppercase" }}>{t('save_setup')}</span>
+              <div style={{ display: "flex", gap: 8 }}>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Manticore 25" 
+                  value={newPresetName}
+                  onChange={(e) => setNewPresetName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") handleSavePreset(); }}
+                  style={{...inputStyle, flex: 1}} 
+                />
+                <button 
+                  onClick={handleSavePreset} 
+                  style={{ padding: "0 16px", borderRadius: 10, border: "none", background: theme.accent, color: "#000", fontWeight: 800, fontSize: 14, cursor: "pointer" }}
+                >
+                  {t('save_btn')}
+                </button>
+              </div>
+            </div>
+
+            {/* List Section */}
+            <div>
+              {presets.length === 0 ? (
+                <div style={{ color: theme.subtext, fontSize: 14, textAlign: "center", padding: "20px 0" }}>{t('no_presets')}</div>
+              ) : (
+                <div style={{ display: "grid", gap: 8, maxHeight: "40vh", overflowY: "auto", paddingRight: 4 }}>
+                  {presets.map(p => (
+                    <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: theme.cardBg, padding: "10px 14px", borderRadius: 10, border: `1px solid ${theme.borderSoft}` }}>
+                      <span style={{ fontWeight: 700, fontSize: 15, color: theme.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingRight: "8px" }}>{p.name}</span>
+                      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                        <button onClick={() => handleLoadPreset(p)} style={{ background: theme.btnBg, color: "#000", border: "none", borderRadius: 6, padding: "8px 14px", fontWeight: 800, cursor: "pointer", fontSize: 12 }}>{t('load_btn')}</button>
+                        <button onClick={() => handleDeletePreset(p.id)} style={{ background: "rgba(255, 77, 77, 0.15)", color: theme.danger, border: `1px solid ${theme.danger}`, borderRadius: 6, padding: "8px 12px", fontWeight: 800, cursor: "pointer", fontSize: 12 }}>✕</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </Modal>
 
         <Modal open={!!warningMsg} title={t('invalid_order')} onClose={() => setWarningMsg("")} theme={theme}>
           <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, color: theme.text, fontSize: 16 }}>{warningMsg}</div>
